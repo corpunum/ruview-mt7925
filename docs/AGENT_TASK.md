@@ -115,7 +115,7 @@ Kernel panic risk: REMAINS
 
 ### 2026-08-06: Gate 1 Hardening & Preflight Verification Complete
 
-- **Main Commit SHA:** `56b0d99` (to be updated on push)
+- **Main Commit SHA:** `ff8b93d`
 - **Exact Patched Module Set:** `/var/tmp/mt7925_gate1/mt7925-common.ko`, `/var/tmp/mt7925_gate1/mt7925e.ko`
 - **Mixed ABI Result:** `PASS` (Symbol linkage between patched `mt7925` and stock `mt792x_lib`, `mt76_connac_lib`, `mt76` verified)
 - **Signer / Hash Verification Result:** `PASS` (`mt7925-common.ko` SHA256 `2070913...`, `mt7925e.ko` SHA256 `8fe6fad...`, PKCS#7 Signer `CN=corpunumRig Secure Boot Module Signature key`)
@@ -126,6 +126,15 @@ Kernel panic risk: REMAINS
 - **Exact Remaining Risk:** Kernel panic, PCIe bus deadlock, or unhandled CPU exception during `rmmod`/`insmod` operations remain outside the guaranteed Ethernet recovery boundary.
 - **Exact Command Awaiting User Approval:** `sudo bash tools/runtime/gate1-driver-replacement.sh --execute-gate1`
 - **Issue #2 Comment URL:** `https://github.com/corpunum/ruview-mt7925/issues/2#issuecomment-5205462831`
+
+### 2026-08-06: Runtime Safety Layer Complete
+
+- **Main Commit SHA:** `PENDING_COMMIT`
+- **Runtime Safety Layer Implementation:** Complete in `tools/runtime/gate1-driver-replacement.sh`.
+- **Pre-Execution Baseline Collection:** Captures `uname -a`, `lsmod`, `modinfo`, `dmesg`, `journalctl -k`, Secure Boot state, and MOK state into `artifacts/runtime/<timestamp>/before/`.
+- **Post-Step Delta Tracking:** Captures `dmesg` delta, `journal` delta, `lsmod`, kernel taint state, `debugfs` tree, and `icap_trigger` status into `artifacts/runtime/<timestamp>/step_<step_name>/`.
+- **Automated Failure/Success Reporting:** Generates `FAILURE.md` (with automatic fail-closed rollback) on error, or `SUCCESS.md` on successful execution.
+- **Gate 1 Preflight Status:** `PASS` (`bash tools/runtime/gate1-driver-replacement.sh --preflight` clean exit code 0).
 
 ```text
 GATE 1 DRIVER REPLACEMENT READINESS

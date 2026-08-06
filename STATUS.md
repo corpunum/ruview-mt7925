@@ -8,6 +8,7 @@
 - Existing enrolled Machine Owner Key (`<existing-enrolled-MOK-certificate>`) is present in `.secondary` keyring (`docs/environment/remote-testing-feasibility.md`). `[RUNTIME PROVEN]`
 - Matching local MOK private signing key `<existing-enrolled-MOK-private-key>` verified. `[RUNTIME PROVEN]`
 - Disposable module PKCS#7 signature metadata verified (`SIGNED_METADATA_VERIFIED`). `[RUNTIME PROVEN]`
+- Runtime Safety Layer implemented in `tools/runtime/gate1-driver-replacement.sh` (`artifacts/runtime/<timestamp>/` logger & `SUCCESS.md`/`FAILURE.md` generator). `[RUNTIME PROVEN]`
 - Primary SSH route uses wired Ethernet (`eno1`, metric 100). Unloading `mt7925e` will not drop SSH access. `[RUNTIME PROVEN]`
 - Rollback scripts (`tools/runtime/prepare-rollback.sh`) verified via dry-run. `[RUNTIME PROVEN]`
 - Ethernet Wake-on-LAN is currently disabled (`Wake-on: d`). `[RUNTIME PROVEN]`
@@ -93,5 +94,7 @@ The access architecture is partially understood.
 Patch v3 is statically compiled and signed, but un-executed.
 
 MOK signature metadata and Ethernet SSH isolation are verified.
+
+Runtime Safety Layer and automated artifact logging are complete in `tools/runtime/gate1-driver-replacement.sh`.
 
 Actual CSI extraction is not proven.
