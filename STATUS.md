@@ -16,9 +16,11 @@
 
 ## Source Proven
 
-- MT7925 testmode structures and command paths exist in `mt76` source.
-- A fixed-size synchronous testmode response buffer exists in source.
-- Unknown unsolicited MCU events may fall through the current handler and be freed (`mt7925_mcu_uni_rx_unsolicited_event`).
+Refer to [`docs/source-provenance.md`](docs/source-provenance.md) for full commit, file, function, and line range details:
+
+- MT7925 testmode structures and command opcode `MCU_UNI_CMD_TESTMODE_CTRL = 0x46` exist in source (`SP-001`).
+- A fixed-size 512-byte synchronous testmode response buffer is copied from `skb->data + 8` in `mt7925_tm_query()` (`SP-002`).
+- Unknown unsolicited MCU events fall through the current handler in `mt7925_mcu_uni_rx_unsolicited_event()` and are freed via `dev_kfree_skb(skb)` (`SP-003`).
 - Source-path existence does not prove the payload contains CSI.
 
 ## Statistically Inferred
