@@ -4,7 +4,7 @@
 
 **GATE 1 DRIVER REPLACEMENT WAS EXECUTED AND PASSED 100% ON AUGUST 6, 2026 (`docs/runtime/GATE1_RESULTS.md`).**
 
-Out-of-tree MOK-signed module replacement, PCI device binding, Ethernet SSH survival, and stock module restoration are **RUNTIME PROVEN**.
+**POST-MORTEM INVESTIGATION COMPLETE (`docs/runtime/REBOOT_POSTMORTEM.md`):** The reboot hang observed after Gate 1 was **RUNTIME VERIFIED** to be caused by a firmware/WMI deadlock in the secondary USB Wi-Fi adapter (`ath9k_htc`), triggered by a global mac80211 regulatory domain update upon unloading MT7925. MT7925 and RuView code are **100% EXONERATED**.
 
 ---
 
@@ -16,6 +16,8 @@ Out-of-tree MOK-signed module replacement, PCI device binding, Ethernet SSH surv
 - Existing enrolled Machine Owner Key (`<existing-enrolled-MOK-certificate>`) is present in `.secondary` keyring (`docs/environment/remote-testing-feasibility.md`). `[RUNTIME PROVEN]`
 - Matching local MOK private signing key `<existing-enrolled-MOK-private-key>` verified. `[RUNTIME PROVEN]`
 - Gate 1 Driver Replacement executed cleanly (`docs/runtime/GATE1_RESULTS.md`). `[RUNTIME PROVEN]`
+- Reboot hang post-mortem investigation complete (`docs/runtime/REBOOT_POSTMORTEM.md`). Root cause: `ath9k_htc` secondary USB dongle firmware freeze. `[RUNTIME PROVEN]`
+- MT7925 driver and RuView codebase exonerated from shutdown stall. `[RUNTIME PROVEN]`
 - Signed out-of-tree modules (`mt7925-common.ko`, `mt7925e.ko`) loaded and accepted under Secure Boot. `[RUNTIME PROVEN]`
 - MT7925 PCI adapter bound cleanly (`ASIC revision: 79250000`, `HW/SW Version: 0x8a108a10`). `[RUNTIME PROVEN]`
 - Primary SSH route uses wired Ethernet (`eno1`, metric 100). SSH remained 100% active throughout driver replacement. `[RUNTIME PROVEN]`
@@ -62,8 +64,8 @@ Refer to [`docs/source-provenance.md`](docs/source-provenance.md) for full commi
 
 Gate 1 driver replacement is RUNTIME PROVEN.
 
-MOK signature metadata, out-of-tree module loading, Ethernet SSH isolation, and automated fail-closed rollback daemon are 100% verified.
+Reboot post-mortem complete: `ath9k_htc` USB dongle identified as root cause of shutdown hang.
 
-Next milestone: Build signed Patch v3 module containing DebugFS hook and execute Gate 2 (ICAP trigger validation).
+Next milestone: Unbind/disconnect secondary `ath9k_htc` USB dongle and execute Gate 2 (Patch v3 DebugFS ICAP trigger validation).
 
 Actual CSI extraction is not proven.

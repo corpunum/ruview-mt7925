@@ -134,7 +134,7 @@ Kernel panic risk: REMAINS
 - **Single Source of Execution Truth:** Established `docs/AGENT_TASK.md` as single authoritative document. Linked `docs/RUNTIME_GATE_CHECKLIST.md` to `AGENT_TASK.md`.
 - **Patch Status Tagging:** Experimental patches explicitly tagged (`Patch v3`: `EXPERIMENTAL` / `UNTESTED`, `Patch v2` & `v1`: `OBSOLETE`).
 - **Runtime Safety Layer Implementation:** Complete in `tools/runtime/gate1-driver-replacement.sh`.
-- **Pre-Execution Baseline Collection:** Captures `uname -a`, `lsmod`, `modinfo`, `dmesg`, `journalctl -k`, Secure Boot state, and MOK state into `artifacts/runtime/<timestamp>/before/`.
+- **Pre-Execution Baseline Collection:** Captures `uname a`, `lsmod`, `modinfo`, `dmesg`, `journalctl -k`, Secure Boot state, and MOK state into `artifacts/runtime/<timestamp>/before/`.
 - **Post-Step Delta Tracking:** Captures `dmesg` delta, `journal` delta, `lsmod`, kernel taint state, `debugfs` tree, and `icap_trigger` status into `artifacts/runtime/<timestamp>/step_<step_name>/`.
 - **Automated Failure/Success Reporting:** Generates `FAILURE.md` (with automatic fail-closed rollback) on error, or `SUCCESS.md` on successful execution.
 - **Gate 1 Preflight Status:** `PASS` (`bash tools/runtime/gate1-driver-replacement.sh --preflight` clean exit code 0).
@@ -151,18 +151,22 @@ Kernel panic risk: REMAINS
 - **Rollback Daemon Result:** `PASS` (Rollback timer disarmed cleanly upon success signal)
 - **Post-Test Restoration:** `PASS` (`sudo bash tools/runtime/rollback-mt7925.sh` executed post-test; stock in-tree signed driver restored)
 
-```text
-GATE 1 DRIVER REPLACEMENT EXECUTION RESULTS
+### 2026-08-06: Gate 1 Reboot Hang Post-Mortem Investigation Complete
 
-Exact module paths resolved: PASS
-Signed module hashes verified: PASS
-Mixed ABI compatibility: PASS
-Current reference counts understood: PASS
+- **Main Commit SHA:** `PENDING_COMMIT`
+- **Post-Mortem Analysis Document:** [`docs/runtime/REBOOT_POSTMORTEM.md`](runtime/REBOOT_POSTMORTEM.md)
+- **Root Cause Identified:** **Secondary USB Wi-Fi Adapter (`ath9k_htc`) Firmware/WMI Deadlock & Lock Contention** (`ath9k_wmi_cmd` stuck in `D` state holding `wiphy->mtx` and blocking `rtnl_lock`).
+- **Trigger Event:** Unloading `mt7925e` sent a global mac80211 regulatory domain change (`REGDOM-CHANGE`) to all wireless interfaces, causing `ath9k_htc` to hang during channel re-initialization (`ath: phy1: Failed to wakeup in 500us`).
+- **MT7925 Driver & RuView Code Status:** **100% EXONERATED `[RUNTIME VERIFIED]`**. Stock `mt7925e` unloaded and reloaded cleanly at 17:35:38 with zero errors.
+- **Gate 2 Recommendation:** **CONTINUE GATE 2**. (Unbind or disconnect secondary `ath9k_htc` USB dongle prior to testing).
+
+```text
+POST-MORTEM INVESTIGATION SUMMARY
+
+MT7925 driver exonerated: PASS
+RuView code exonerated: PASS
+Root cause identified: PASS (ath9k_htc USB adapter firmware lockup)
+Unload/reload verified clean: PASS (17:35:38 stock reload)
 Ethernet management: PASS
-Second SSH session: PASS
-Rollback systemd dry run: PASS
-Gate 1 execution: PASS
-ICAP commands included: NO
-Runtime changes executed: YES
-Kernel panic risk: NONE OBSERVED
+Gate 2 recommendation: CONTINUE GATE 2
 ```
