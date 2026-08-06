@@ -153,7 +153,7 @@ Kernel panic risk: REMAINS
 
 ### 2026-08-06: Gate 1 Reboot Hang Post-Mortem Investigation Complete
 
-- **Main Commit SHA:** `PENDING_COMMIT`
+- **Main Commit SHA:** `d225413`
 - **Post-Mortem Analysis Document:** [`docs/runtime/REBOOT_POSTMORTEM.md`](runtime/REBOOT_POSTMORTEM.md)
 - **Root Cause Identified:** **Secondary USB Wi-Fi Adapter (`ath9k_htc`) Firmware/WMI Deadlock & Lock Contention** (`ath9k_wmi_cmd` stuck in `D` state holding `wiphy->mtx` and blocking `rtnl_lock`).
 - **Trigger Event:** Unloading `mt7925e` sent a global mac80211 regulatory domain change (`REGDOM-CHANGE`) to all wireless interfaces, causing `ath9k_htc` to hang during channel re-initialization (`ath: phy1: Failed to wakeup in 500us`).
