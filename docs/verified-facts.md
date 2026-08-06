@@ -11,6 +11,8 @@
 
 ## Verified Source Code Facts
 
-1. **Testmode Command Structures:** [`drivers/net/wireless/mediatek/mt76/mt7925/mcu.h`](file:///tmp/mt76_kernel/mt7925/mcu.h) contains complete definitions for `struct mt7925_rftest_cmd` and `MCU_UNI_CMD_TESTMODE_CTRL` (`0x46`). `[SOURCE PROVEN]`
-2. **Synchronous Query Handler:** [`mt7925/testmode.c:114`](file:///tmp/mt76_kernel/mt7925/testmode.c#L114) contains `mt7925_tm_query()` which copies 512 bytes (`MT7925_EVT_RSP_LEN`) from `skb->data + 8`. `[SOURCE PROVEN]`
-3. **Unsolicited Event Drop:** Unhandled unsolicited MCU event IDs fall through to `default:` in `mt7925_mcu_uni_rx_unsolicited_event()` in [`mt7925/mcu.c:699`](file:///tmp/mt76_kernel/mt7925/mcu.c#L699) and are freed via `dev_kfree_skb(skb)`. `[SOURCE PROVEN]`
+Refer to [`docs/source-provenance.md`](source-provenance.md) for pinned repository, commit SHA, file path, function, and line range details:
+
+1. **Testmode Command Structures (SP-001):** `mt76_connac_mcu.h:1351` defines `MCU_UNI_CMD_TESTMODE_CTRL = 0x46`. `[SOURCE PROVEN]`
+2. **Synchronous Query Handler (SP-002):** `mt7925/testmode.c:86-119` (`mt7925_tm_query()`) copies 512 bytes (`MT7925_EVT_RSP_LEN`) from `skb->data + 8`. `[SOURCE PROVEN]`
+3. **Unsolicited Event Drop (SP-003):** `mt7925/mcu.c:655-700` (`mt7925_mcu_uni_rx_unsolicited_event()`) drops unhandled unsolicited event IDs via `dev_kfree_skb(skb)`. `[SOURCE PROVEN]`
