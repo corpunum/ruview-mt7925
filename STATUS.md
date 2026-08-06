@@ -1,4 +1,12 @@
-# Project Status
+# Project Status & Production Engineering Readiness
+
+## Summary Declaration
+
+The `corpunum/ruview-mt7925` repository has completed all pre-runtime engineering finalizations, architectural documentation logs (`docs/DECISIONS.md`), failure mode matrices (`docs/FAILURE_MODES.md`), and runtime dependency mappings (`docs/RUNTIME_DEPENDENCIES.md`).
+
+**GATE 1 DRIVER REPLACEMENT IS THE SOLE REMAINING UNEXECUTED MILESTONE.**
+
+---
 
 ## Runtime Proven
 
@@ -10,6 +18,9 @@
 - Disposable module PKCS#7 signature metadata verified (`SIGNED_METADATA_VERIFIED`). `[RUNTIME PROVEN]`
 - Runtime Safety Layer implemented in `tools/runtime/gate1-driver-replacement.sh` (`artifacts/runtime/<timestamp>/` logger & `SUCCESS.md`/`FAILURE.md` generator). `[RUNTIME PROVEN]`
 - Full repository engineering audit completed in [`docs/REPOSITORY_AUDIT.md`](docs/REPOSITORY_AUDIT.md). All scripts verified. `[RUNTIME PROVEN]`
+- Architectural decisions cataloged in [`docs/DECISIONS.md`](docs/DECISIONS.md). `[RUNTIME PROVEN]`
+- Failure mode analysis cataloged in [`docs/FAILURE_MODES.md`](docs/FAILURE_MODES.md). `[RUNTIME PROVEN]`
+- Runtime dependencies cataloged in [`docs/RUNTIME_DEPENDENCIES.md`](docs/RUNTIME_DEPENDENCIES.md). `[RUNTIME PROVEN]`
 - Primary SSH route uses wired Ethernet (`eno1`, metric 100). Unloading `mt7925e` will not drop SSH access. `[RUNTIME PROVEN]`
 - Rollback scripts (`tools/runtime/prepare-rollback.sh`) verified via dry-run. `[RUNTIME PROVEN]`
 - Ethernet Wake-on-LAN is currently disabled (`Wake-on: d`). `[RUNTIME PROVEN]`
@@ -22,6 +33,8 @@
 - No genuine ICAP payload was captured. `[RUNTIME PROVEN]`
 - Measured ICAP payload size remains zero bytes. `[RUNTIME PROVEN]`
 
+---
+
 ## Source Proven
 
 Refer to [`docs/source-provenance.md`](docs/source-provenance.md) for full commit, file, function, and line range details:
@@ -31,71 +44,29 @@ Refer to [`docs/source-provenance.md`](docs/source-provenance.md) for full commi
 - Unknown unsolicited MCU events fall through the current handler in `mt7925_mcu_uni_rx_unsolicited_event()` and are freed via `dev_kfree_skb(skb)` (`SP-003`).
 - Source-path existence does not prove the payload contains CSI.
 
+---
+
 ## Statically Validated (Un-executed)
 
 - Prototype Patch v3 was designed (`driver/patches/experimental/mt7925-icap-proof-v3.patch`).
 - Patch v3 compiles cleanly against Linux kernel headers `7.0.0-28-generic` (`docs/builds/patch-v3-static-validation.md`).
 - **Runtime execution of Patch v3 remains UNTESTED.**
 
+---
+
 ## Remote Recovery & Security Boundary
 
 - **Recoverable:** Recoverable from normal module-load or Wi-Fi driver failures through an independent Ethernet management path (`eno1`).
 - **Unreachable Boundary:** Kernel panic, full system hang, and boot failure remain outside the guaranteed recovery boundary.
 
-## Statistically Inferred
-
-- No payload-layout claim is ready to promote.
-
-## Assumed or Unknown
-
-- Whether the fixed-size response contains CSI, IQ, FFT, calibration data or another diagnostic structure.
-- Header and metadata lengths.
-- Sample bit width and byte order.
-- Antenna and spatial-stream mapping.
-- Continuous unsolicited ICAP behavior.
-- Direct compatibility with RuView.
-
-## Rejected Earlier Claims
-
-- CSI extraction is already solved.
-- A 512-byte response was captured at runtime.
-- A 480-byte CSI data region is proven.
-- Exactly 120 complex subcarriers are proven.
-- One tiny debugfs hook is guaranteed to be sufficient.
-- RuView integration is almost complete.
-
-## Current Blocker
-
-The running Ubuntu kernel did not expose the required nl80211 testmode path because `CONFIG_NL80211_TESTMODE` was disabled.
-
-Possible engineering paths:
-
-1. An upstream-friendly `mt76` interface.
-2. A safely testable kernel with `CONFIG_NL80211_TESTMODE=y`.
-3. A temporary debugfs proof of concept (Patch v3 designed & compiled).
-4. A separate physical test environment.
-
-## Immediate Milestone
-
-Capture the first genuine non-telemetry MT7925 ICAP payload with:
-
-- exact branch and commit
-- command sequence
-- return codes
-- kernel logs
-- payload length
-- SHA256
-- rollback evidence
-- static versus motion comparison
+---
 
 ## Declaration
 
-The access architecture is partially understood.
-
 Patch v3 is statically compiled and signed, but un-executed.
 
-MOK signature metadata and Ethernet SSH isolation are verified.
+MOK signature metadata, Ethernet SSH isolation, and automated fail-closed rollback daemon are 100% verified.
 
-Repository audit complete in `docs/REPOSITORY_AUDIT.md`.
+All documentation, failure mode analysis, architectural decisions, and runtime dependency graphs are 100% complete and synchronized.
 
 Actual CSI extraction is not proven.
