@@ -149,4 +149,3 @@ else
     echo "Usage: $0 [--preflight | --execute-gate1]"
     exit 1
 fi
-chmod +x tools/runtime/gate1-driver-replacement.sh
