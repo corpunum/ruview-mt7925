@@ -143,7 +143,7 @@ Kernel panic risk: REMAINS
 
 ### 2026-08-06: Production Engineering Finalization & Pre-Runtime Review Complete
 
-- **Main Commit SHA:** `PENDING_COMMIT`
+- **Main Commit SHA:** `c7c395b`
 - **Pre-Runtime Baseline Tag:** Tag `v0.1-pre-runtime` created and pushed; GitHub Release `Pre-Runtime Baseline` published.
 - **Hostile Engineering Audit:** Completed in [`docs/FINAL_RUNTIME_REVIEW.md`](FINAL_RUNTIME_REVIEW.md). Remediated trailing syntax defect in `tools/runtime/gate1-driver-replacement.sh`.
 - **Engineering Decisions Log:** Created [`docs/DECISIONS.md`](DECISIONS.md) documenting core architectural principles.
