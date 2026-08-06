@@ -1,0 +1,28 @@
+name: Experiment Log
+description: Submit a new experimental test log
+title: "[EXPERIMENT]: "
+labels: ["experiment"]
+body:
+  - type: markdown
+    attributes:
+      value: Submit a structured experimental log following docs/evidence-policy.md.
+  - type: input
+    id: kernel
+    attributes:
+      label: Kernel Version
+      placeholder: "7.0.0-28-generic"
+    validations:
+      required: true
+  - type: textarea
+    id: commands
+    attributes:
+      label: Commands Executed
+      placeholder: "sudo iw dev mon0 vendor send ..."
+    validations:
+      required: true
+  - type: textarea
+    id: results
+    attributes:
+      label: Observed Results
+    validations:
+      required: true

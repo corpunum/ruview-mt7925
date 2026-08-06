@@ -1,0 +1,11 @@
+name: Research Inquiry
+description: Propose a research task or driver audit
+title: "[RESEARCH]: "
+labels: ["research"]
+body:
+  - type: textarea
+    id: topic
+    attributes:
+      label: Research Topic / Target Function
+    validations:
+      required: true

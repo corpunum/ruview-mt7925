@@ -1,0 +1,7 @@
+--- a/drivers/net/wireless/mediatek/mt76/mt7925/testmode.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7925/testmode.c
+@@ -1,5 +1,5 @@
+-/* Experimental draft patch v2 for MT7925 ICAP testmode access */
+-/* WARNING: Unproven at runtime. STATUS.md is authoritative. */
++/* Historical draft patch v2 for MT7925 ICAP testmode access */
++/* STATUS.md is authoritative. */

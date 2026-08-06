@@ -1,0 +1,42 @@
+name: Validate Repository & Security
+
+on:
+  push:
+    branches: [ main, "research/**", "feature/**" ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Verify Core Documentation Exists
+        run: |
+          test -f README.md || (echo "Missing README.md" && exit 1)
+          test -f STATUS.md || (echo "Missing STATUS.md" && exit 1)
+          test -f ROADMAP.md || (echo "Missing ROADMAP.md" && exit 1)
+          test -f LICENSE || (echo "Missing LICENSE" && exit 1)
+
+      - name: Check for Forbidden Binary Files
+        run: |
+          FORBIDDEN=$(find . -type f \( -name "*.ko" -o -name "*.pcap" -o -name "*.pcapng" \) ! -path "*/fixtures/*")
+          if [ -n "$FORBIDDEN" ]; then
+            echo "Forbidden binary artifacts found: $FORBIDDEN"
+            exit 1
+          fi
+
+      - name: Test Sanitizer Tool
+        run: |
+          python3 tools/sanitize-report.py --help
+
+      - name: Scan for Accidental Secrets
+        run: |
+          grep -RInE '(BEGIN .*PRIVATE KEY|password|passwd|secret|token|wpa.*psk)' . --exclude=LICENSE --exclude-dir=.git || true
