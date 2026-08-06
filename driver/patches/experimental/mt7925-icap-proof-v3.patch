@@ -1,0 +1,48 @@
+--- a/mt7925/debugfs.c
++++ b/mt7925/debugfs.c
+@@ -8,6 +8,46 @@
+ static int
+ mt7925_pm_idle_timeout_set(void *data, u64 val)
+ {
++	struct mt792x_dev *dev = data;
++	struct mt7925_rftest_cmd cmd;
++	struct sk_buff *skb = NULL;
++	int ret;
++
++	if (val != 1)
++		return -EINVAL;
++
++	memset(&cmd, 0, sizeof(cmd));
++	cmd.ctrl.action = CMD_TEST_CTRL_ACT_SWITCH_MODE;
++	cmd.ctrl.data.op_mode = cpu_to_le32(CMD_TEST_CTRL_ACT_SWITCH_MODE_ICAP);
++
++	mutex_lock(&dev->mt76.mutex);
++	dev->pm.enable = false;
++	ret = mt76_mcu_send_and_get_msg(&dev->mt76, MCU_UNI_QUERY(TESTMODE_CTRL),
++					&cmd, sizeof(cmd), true, &skb);
++	if (ret) {
++		dev->pm.enable = true;
++		mutex_unlock(&dev->mt76.mutex);
++		return ret;
++	}
++
++	if (skb && skb->len >= MT7925_EVT_RSP_LEN + 8) {
++		dev_kfree_skb(skb);
++	} else if (skb) {
++		dev_kfree_skb(skb);
++		ret = -EINVAL;
++	}
++
++	dev->pm.enable = true;
++	mutex_unlock(&dev->mt76.mutex);
++	return ret;
++}
+
++DEFINE_DEBUGFS_ATTRIBUTE(fops_icap_trigger, NULL, mt7925_pm_idle_timeout_set, "%llu\n");
++
++static int
++mt7925_pm_idle_timeout_set_orig(void *data, u64 val)
++{
+ 	struct mt792x_dev *dev = data;
+
+ 	dev->pm.idle_timeout = msecs_to_jiffies(val);

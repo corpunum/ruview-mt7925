@@ -23,6 +23,12 @@ Refer to [`docs/source-provenance.md`](docs/source-provenance.md) for full commi
 - Unknown unsolicited MCU events fall through the current handler in `mt7925_mcu_uni_rx_unsolicited_event()` and are freed via `dev_kfree_skb(skb)` (`SP-003`).
 - Source-path existence does not prove the payload contains CSI.
 
+## Statically Validated (Un-executed)
+
+- Prototype Patch v3 was designed (`driver/patches/experimental/mt7925-icap-proof-v3.patch`).
+- Patch v3 compiles cleanly against Linux kernel headers `7.0.0-28-generic` (`docs/builds/patch-v3-static-validation.md`).
+- **Runtime execution of Patch v3 remains UNTESTED.**
+
 ## Statistically Inferred
 
 - No payload-layout claim is ready to promote.
@@ -53,7 +59,7 @@ Possible engineering paths:
 
 1. An upstream-friendly `mt76` interface.
 2. A safely testable kernel with `CONFIG_NL80211_TESTMODE=y`.
-3. A temporary debugfs proof of concept.
+3. A temporary debugfs proof of concept (Patch v3 designed & compiled).
 4. A separate physical test environment.
 
 ## Immediate Milestone
@@ -72,5 +78,7 @@ Capture the first genuine non-telemetry MT7925 ICAP payload with:
 ## Declaration
 
 The access architecture is partially understood.
+
+Patch v3 is statically compiled but un-executed.
 
 Actual CSI extraction is not proven.
