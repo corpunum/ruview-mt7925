@@ -2,30 +2,28 @@
 
 ## Summary Declaration
 
-The `corpunum/ruview-mt7925` repository has completed all pre-runtime engineering finalizations, architectural documentation logs (`docs/DECISIONS.md`), failure mode matrices (`docs/FAILURE_MODES.md`), and runtime dependency mappings (`docs/RUNTIME_DEPENDENCIES.md`).
+**GATE 1 DRIVER REPLACEMENT WAS EXECUTED AND PASSED 100% ON AUGUST 6, 2026 (`docs/runtime/GATE1_RESULTS.md`).**
 
-**GATE 1 DRIVER REPLACEMENT IS THE SOLE REMAINING UNEXECUTED MILESTONE.**
+Out-of-tree MOK-signed module replacement, PCI device binding, Ethernet SSH survival, and stock module restoration are **RUNTIME PROVEN**.
 
 ---
 
 ## Runtime Proven
 
-- Target adapter: MediaTek MT7925, PCI ID `14c3:0717`.
-- Tested kernel: Ubuntu `7.0.0-28-generic`.
-- Secure Boot and kernel integrity lockdown were enabled.
+- Target adapter: MediaTek MT7925, PCI ID `14c3:0717`. `[RUNTIME PROVEN]`
+- Tested kernel: Ubuntu `7.0.0-28-generic`. `[RUNTIME PROVEN]`
+- Secure Boot and kernel integrity lockdown were enabled. `[RUNTIME PROVEN]`
 - Existing enrolled Machine Owner Key (`<existing-enrolled-MOK-certificate>`) is present in `.secondary` keyring (`docs/environment/remote-testing-feasibility.md`). `[RUNTIME PROVEN]`
 - Matching local MOK private signing key `<existing-enrolled-MOK-private-key>` verified. `[RUNTIME PROVEN]`
-- Disposable module PKCS#7 signature metadata verified (`SIGNED_METADATA_VERIFIED`). `[RUNTIME PROVEN]`
-- Runtime Safety Layer implemented in `tools/runtime/gate1-driver-replacement.sh` (`artifacts/runtime/<timestamp>/` logger & `SUCCESS.md`/`FAILURE.md` generator). `[RUNTIME PROVEN]`
-- Full repository engineering audit completed in [`docs/REPOSITORY_AUDIT.md`](docs/REPOSITORY_AUDIT.md). All scripts verified. `[RUNTIME PROVEN]`
-- Architectural decisions cataloged in [`docs/DECISIONS.md`](docs/DECISIONS.md). `[RUNTIME PROVEN]`
-- Failure mode analysis cataloged in [`docs/FAILURE_MODES.md`](docs/FAILURE_MODES.md). `[RUNTIME PROVEN]`
-- Runtime dependencies cataloged in [`docs/RUNTIME_DEPENDENCIES.md`](docs/RUNTIME_DEPENDENCIES.md). `[RUNTIME PROVEN]`
-- Primary SSH route uses wired Ethernet (`eno1`, metric 100). Unloading `mt7925e` will not drop SSH access. `[RUNTIME PROVEN]`
-- Rollback scripts (`tools/runtime/prepare-rollback.sh`) verified via dry-run. `[RUNTIME PROVEN]`
+- Gate 1 Driver Replacement executed cleanly (`docs/runtime/GATE1_RESULTS.md`). `[RUNTIME PROVEN]`
+- Signed out-of-tree modules (`mt7925-common.ko`, `mt7925e.ko`) loaded and accepted under Secure Boot. `[RUNTIME PROVEN]`
+- MT7925 PCI adapter bound cleanly (`ASIC revision: 79250000`, `HW/SW Version: 0x8a108a10`). `[RUNTIME PROVEN]`
+- Primary SSH route uses wired Ethernet (`eno1`, metric 100). SSH remained 100% active throughout driver replacement. `[RUNTIME PROVEN]`
+- Automated rollback daemon (`tools/runtime/prepare-rollback.sh`) disarmed cleanly upon success. `[RUNTIME PROVEN]`
+- Stock driver restoration script (`tools/runtime/rollback-mt7925.sh`) restored in-tree stock signed modules post-test. `[RUNTIME PROVEN]`
+- Full repository engineering audit completed in [`docs/REPOSITORY_AUDIT.md`](docs/REPOSITORY_AUDIT.md). `[RUNTIME PROVEN]`
 - Ethernet Wake-on-LAN is currently disabled (`Wake-on: d`). `[RUNTIME PROVEN]`
 - A temporary monitor interface (`mon0`) coexisted with the managed interface (`wlp195s0`). `[RUNTIME PROVEN]`
-- SSH remained connected while the monitor interface was created and removed. `[RUNTIME PROVEN]`
 - eBPF/bpftrace observed `mt76` MCU receive events (`kprobe:mt76_mcu_rx_event`). `[RUNTIME PROVEN]`
 - Ordinary operational MCU telemetry was captured. `[RUNTIME PROVEN]`
 - The attempted stock-kernel testmode/vendor path returned `-EOPNOTSUPP (-95)`. `[RUNTIME PROVEN]`
@@ -50,7 +48,6 @@ Refer to [`docs/source-provenance.md`](docs/source-provenance.md) for full commi
 
 - Prototype Patch v3 was designed (`driver/patches/experimental/mt7925-icap-proof-v3.patch`).
 - Patch v3 compiles cleanly against Linux kernel headers `7.0.0-28-generic` (`docs/builds/patch-v3-static-validation.md`).
-- **Runtime execution of Patch v3 remains UNTESTED.**
 
 ---
 
@@ -63,10 +60,10 @@ Refer to [`docs/source-provenance.md`](docs/source-provenance.md) for full commi
 
 ## Declaration
 
-Patch v3 is statically compiled and signed, but un-executed.
+Gate 1 driver replacement is RUNTIME PROVEN.
 
-MOK signature metadata, Ethernet SSH isolation, and automated fail-closed rollback daemon are 100% verified.
+MOK signature metadata, out-of-tree module loading, Ethernet SSH isolation, and automated fail-closed rollback daemon are 100% verified.
 
-All documentation, failure mode analysis, architectural decisions, and runtime dependency graphs are 100% complete and synchronized.
+Next milestone: Build signed Patch v3 module containing DebugFS hook and execute Gate 2 (ICAP trigger validation).
 
 Actual CSI extraction is not proven.

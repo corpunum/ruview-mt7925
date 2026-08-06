@@ -28,8 +28,8 @@ run_preflight() {
     echo "[+] Signed module artifacts present in $MODULE_DIR."
 
     # 3. Check Vermagic & Signer
-    COMMON_SIGNER=$(modinfo "$COMMON_MOD" 2>/dev/null | grep 'signer' | head -n 1 || true)
-    PCI_SIGNER=$(modinfo "$PCI_MOD" 2>/dev/null | grep 'signer' | head -n 1 || true)
+    COMMON_SIGNER=$(modinfo "$COMMON_MOD" 2>/dev/null | awk '/signer:/ {print $2; exit}')
+    PCI_SIGNER=$(modinfo "$PCI_MOD" 2>/dev/null | awk '/signer:/ {print $2; exit}')
 
     if [ -z "$COMMON_SIGNER" ] || [ -z "$PCI_SIGNER" ]; then
         echo "[!] ERROR: Module PKCS#7 signature missing or invalid."
@@ -38,7 +38,7 @@ run_preflight() {
     echo "[+] Module signatures verified: $COMMON_SIGNER"
 
     # 4. Check Ethernet Route Isolation
-    PRIMARY_ROUTE=$(ip route show default | head -n 1)
+    PRIMARY_ROUTE=$(ip route show default | awk 'NR==1')
     if [[ "$PRIMARY_ROUTE" != *"eno1"* ]]; then
         echo "[!] WARNING: Primary default route is NOT wired Ethernet (eno1)."
     else
@@ -122,7 +122,7 @@ execute_gate1() {
 
     # 4. Verify PCI Binding & Dmesg
     sleep 2
-    if ! dmesg | tail -n 30 | grep -i 'mt7925'; then
+    if ! dmesg | tail -n 30 | grep -q -i 'mt7925'; then
         on_failure "pci_bind_check"
     fi
 

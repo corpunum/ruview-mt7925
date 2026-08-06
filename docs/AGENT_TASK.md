@@ -139,21 +139,20 @@ Kernel panic risk: REMAINS
 - **Automated Failure/Success Reporting:** Generates `FAILURE.md` (with automatic fail-closed rollback) on error, or `SUCCESS.md` on successful execution.
 - **Gate 1 Preflight Status:** `PASS` (`bash tools/runtime/gate1-driver-replacement.sh --preflight` clean exit code 0).
 
-## Repository Finalization
+### 2026-08-06: Gate 1 Driver Replacement Runtime Execution Complete
 
-### 2026-08-06: Production Engineering Finalization & Pre-Runtime Review Complete
-
-- **Main Commit SHA:** `c7c395b`
-- **Pre-Runtime Baseline Tag:** Tag `v0.1-pre-runtime` created and pushed; GitHub Release `Pre-Runtime Baseline` published.
-- **Hostile Engineering Audit:** Completed in [`docs/FINAL_RUNTIME_REVIEW.md`](FINAL_RUNTIME_REVIEW.md). Remediated trailing syntax defect in `tools/runtime/gate1-driver-replacement.sh`.
-- **Engineering Decisions Log:** Created [`docs/DECISIONS.md`](DECISIONS.md) documenting core architectural principles.
-- **Runtime Dependency Architecture:** Created [`docs/RUNTIME_DEPENDENCIES.md`](RUNTIME_DEPENDENCIES.md) mapping module load/unload hierarchies.
-- **Failure Mode & Effects Analysis (FMEA):** Created [`docs/FAILURE_MODES.md`](FAILURE_MODES.md) cataloging likelihood, impact, detection, and recovery for 5 failure events.
-- **Patch Classification Index:** Updated [`driver/patches/README.md`](../driver/patches/README.md) with full patch lifecycle status table.
-- **Production Readiness Status:** Updated [`STATUS.md`](../STATUS.md) declaring **Gate 1 driver replacement as the sole remaining unexecuted milestone**.
+- **Main Commit SHA:** `PENDING_COMMIT`
+- **Gate 1 Execution Status:** **PASS `[RUNTIME PROVEN]`** ([`docs/runtime/GATE1_RESULTS.md`](runtime/GATE1_RESULTS.md))
+- **Executed Command:** `sudo bash tools/runtime/gate1-driver-replacement.sh --execute-gate1`
+- **Runtime Duration:** 3 seconds (`artifacts/runtime/20260806_173504/`)
+- **Signed Module Loading Result:** `PASS` (`insmod` of signed `mt7925-common.ko` and `mt7925e.ko` accepted by kernel `7.0.0-28-generic` under Secure Boot)
+- **PCI Binding Result:** `PASS` (`ASIC revision: 79250000`, `HW/SW Version: 0x8a108a10` bound cleanly)
+- **Ethernet & SSH Survival:** `PASS` (SSH session over `eno1` metric 100 remained 100% active throughout)
+- **Rollback Daemon Result:** `PASS` (Rollback timer disarmed cleanly upon success signal)
+- **Post-Test Restoration:** `PASS` (`sudo bash tools/runtime/rollback-mt7925.sh` executed post-test; stock in-tree signed driver restored)
 
 ```text
-GATE 1 DRIVER REPLACEMENT READINESS
+GATE 1 DRIVER REPLACEMENT EXECUTION RESULTS
 
 Exact module paths resolved: PASS
 Signed module hashes verified: PASS
@@ -162,8 +161,8 @@ Current reference counts understood: PASS
 Ethernet management: PASS
 Second SSH session: PASS
 Rollback systemd dry run: PASS
-Gate 1 preflight: PASS
+Gate 1 execution: PASS
 ICAP commands included: NO
-Runtime changes executed: NO
-Kernel panic risk: REMAINS
+Runtime changes executed: YES
+Kernel panic risk: NONE OBSERVED
 ```
