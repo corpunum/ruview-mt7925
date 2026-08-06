@@ -127,9 +127,12 @@ Kernel panic risk: REMAINS
 - **Exact Command Awaiting User Approval:** `sudo bash tools/runtime/gate1-driver-replacement.sh --execute-gate1`
 - **Issue #2 Comment URL:** `https://github.com/corpunum/ruview-mt7925/issues/2#issuecomment-5205462831`
 
-### 2026-08-06: Runtime Safety Layer Complete
+### 2026-08-06: Runtime Safety Layer & Comprehensive Audit Complete
 
-- **Main Commit SHA:** `c2e0a90`
+- **Main Commit SHA:** `PENDING_COMMIT`
+- **Comprehensive Repository Audit:** Completed in [`docs/REPOSITORY_AUDIT.md`](REPOSITORY_AUDIT.md).
+- **Single Source of Execution Truth:** Established `docs/AGENT_TASK.md` as single authoritative document. Linked `docs/RUNTIME_GATE_CHECKLIST.md` to `AGENT_TASK.md`.
+- **Patch Status Tagging:** Experimental patches explicitly tagged (`Patch v3`: `EXPERIMENTAL` / `UNTESTED`, `Patch v2` & `v1`: `OBSOLETE`).
 - **Runtime Safety Layer Implementation:** Complete in `tools/runtime/gate1-driver-replacement.sh`.
 - **Pre-Execution Baseline Collection:** Captures `uname -a`, `lsmod`, `modinfo`, `dmesg`, `journalctl -k`, Secure Boot state, and MOK state into `artifacts/runtime/<timestamp>/before/`.
 - **Post-Step Delta Tracking:** Captures `dmesg` delta, `journal` delta, `lsmod`, kernel taint state, `debugfs` tree, and `icap_trigger` status into `artifacts/runtime/<timestamp>/step_<step_name>/`.
