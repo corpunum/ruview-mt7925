@@ -143,7 +143,7 @@ Kernel panic risk: REMAINS
 
 ### 2026-08-06: Production Engineering Finalization Complete
 
-- **Main Commit SHA:** `PENDING_COMMIT`
+- **Main Commit SHA:** `40daf81`
 - **Engineering Decisions Log:** Created [`docs/DECISIONS.md`](DECISIONS.md) documenting core architectural principles (main-only workflow, strict evidence classification, mandatory approval gate, rollback-first philosophy, upstream-first policy, runtime evidence primacy).
 - **Runtime Dependency Architecture:** Created [`docs/RUNTIME_DEPENDENCIES.md`](RUNTIME_DEPENDENCIES.md) mapping module load/unload hierarchies, sysfs/debugfs nodes, and artifact logging structures.
 - **Failure Mode & Effects Analysis (FMEA):** Created [`docs/FAILURE_MODES.md`](FAILURE_MODES.md) cataloging likelihood, impact, detection, and recovery for 5 distinct failure events.
