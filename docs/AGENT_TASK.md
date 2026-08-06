@@ -129,7 +129,7 @@ Kernel panic risk: REMAINS
 
 ### 2026-08-06: Runtime Safety Layer Complete
 
-- **Main Commit SHA:** `PENDING_COMMIT`
+- **Main Commit SHA:** `c2e0a90`
 - **Runtime Safety Layer Implementation:** Complete in `tools/runtime/gate1-driver-replacement.sh`.
 - **Pre-Execution Baseline Collection:** Captures `uname -a`, `lsmod`, `modinfo`, `dmesg`, `journalctl -k`, Secure Boot state, and MOK state into `artifacts/runtime/<timestamp>/before/`.
 - **Post-Step Delta Tracking:** Captures `dmesg` delta, `journal` delta, `lsmod`, kernel taint state, `debugfs` tree, and `icap_trigger` status into `artifacts/runtime/<timestamp>/step_<step_name>/`.
