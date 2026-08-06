@@ -134,7 +134,7 @@ Kernel panic risk: REMAINS
 - **Single Source of Execution Truth:** Established `docs/AGENT_TASK.md` as single authoritative document. Linked `docs/RUNTIME_GATE_CHECKLIST.md` to `AGENT_TASK.md`.
 - **Patch Status Tagging:** Experimental patches explicitly tagged (`Patch v3`: `EXPERIMENTAL` / `UNTESTED`, `Patch v2` & `v1`: `OBSOLETE`).
 - **Runtime Safety Layer Implementation:** Complete in `tools/runtime/gate1-driver-replacement.sh`.
-- **Pre-Execution Baseline Collection:** Captures `uname a`, `lsmod`, `modinfo`, `dmesg`, `journalctl -k`, Secure Boot state, and MOK state into `artifacts/runtime/<timestamp>/before/`.
+- **Pre-Execution Baseline Collection:** Captures `uname -a`, `lsmod`, `modinfo`, `dmesg`, `journalctl -k`, Secure Boot state, and MOK state into `artifacts/runtime/<timestamp>/before/`.
 - **Post-Step Delta Tracking:** Captures `dmesg` delta, `journal` delta, `lsmod`, kernel taint state, `debugfs` tree, and `icap_trigger` status into `artifacts/runtime/<timestamp>/step_<step_name>/`.
 - **Automated Failure/Success Reporting:** Generates `FAILURE.md` (with automatic fail-closed rollback) on error, or `SUCCESS.md` on successful execution.
 - **Gate 1 Preflight Status:** `PASS` (`bash tools/runtime/gate1-driver-replacement.sh --preflight` clean exit code 0).
@@ -160,13 +160,21 @@ Kernel panic risk: REMAINS
 - **MT7925 Driver & RuView Code Status:** **100% EXONERATED `[RUNTIME VERIFIED]`**. Stock `mt7925e` unloaded and reloaded cleanly at 17:35:38 with zero errors.
 - **Gate 2 Recommendation:** **CONTINUE GATE 2**. (Unbind or disconnect secondary `ath9k_htc` USB dongle prior to testing).
 
-```text
-POST-MORTEM INVESTIGATION SUMMARY
+### 2026-08-06: Gate 2 Preparation & Open-Source Readiness Complete
 
-MT7925 driver exonerated: PASS
-RuView code exonerated: PASS
-Root cause identified: PASS (ath9k_htc USB adapter firmware lockup)
-Unload/reload verified clean: PASS (17:35:38 stock reload)
-Ethernet management: PASS
-Gate 2 recommendation: CONTINUE GATE 2
+- **Main Commit SHA:** `PENDING_COMMIT`
+- **Gate 2 Readiness Matrix & Risk Register:** Authored [`docs/GATE2_READINESS.md`](GATE2_READINESS.md) classifying runtime facts (`[RUNTIME PROVEN]`) versus remaining assumptions (`[UNTESTED]`).
+- **Technical Debt Register:** Authored [`docs/TECHNICAL_DEBT.md`](TECHNICAL_DEBT.md) logging script refactoring and deprecated patch series (`Patch v1` & `v2`).
+- **Open-Source Readiness:** Authored [`docs/OPEN_SOURCE_READINESS.md`](OPEN_SOURCE_READINESS.md) evaluating licensing (`BSD-3-Clause-Clear` / `MIT`), zero-credentials sanitization, and upstream directory organization.
+- **Execution Status:** **STOPPED BEFORE MODULE LOADING.** No kernel modules were loaded, unloaded, or modified.
+
+```text
+GATE 2 READINESS SUMMARY
+
+Runtime proven facts matrix: COMPLETE
+Risk register & mitigations: COMPLETE
+Technical debt register: COMPLETE
+Open-source readiness evaluation: COMPLETE
+Gate 2 readiness status: READY (Awaiting parallel ath9k_htc investigation completion)
+Runtime changes executed: NO
 ```

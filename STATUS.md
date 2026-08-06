@@ -6,6 +6,8 @@
 
 **POST-MORTEM INVESTIGATION COMPLETE (`docs/runtime/REBOOT_POSTMORTEM.md`):** The reboot hang observed after Gate 1 was **RUNTIME VERIFIED** to be caused by a firmware/WMI deadlock in the secondary USB Wi-Fi adapter (`ath9k_htc`), triggered by a global mac80211 regulatory domain update upon unloading MT7925. MT7925 and RuView code are **100% EXONERATED**.
 
+**GATE 2 READINESS COMPLETE (`docs/GATE2_READINESS.md`):** Repository refactoring, risk registers, technical debt registers (`docs/TECHNICAL_DEBT.md`), and open-source publication evaluations (`docs/OPEN_SOURCE_READINESS.md`) are complete. Gate 2 execution awaits completion of the parallel `ath9k_htc` investigation.
+
 ---
 
 ## Runtime Proven
@@ -18,6 +20,7 @@
 - Gate 1 Driver Replacement executed cleanly (`docs/runtime/GATE1_RESULTS.md`). `[RUNTIME PROVEN]`
 - Reboot hang post-mortem investigation complete (`docs/runtime/REBOOT_POSTMORTEM.md`). Root cause: `ath9k_htc` secondary USB dongle firmware freeze. `[RUNTIME PROVEN]`
 - MT7925 driver and RuView codebase exonerated from shutdown stall. `[RUNTIME PROVEN]`
+- Gate 2 readiness matrix, risk register, and technical debt audit complete ([`docs/GATE2_READINESS.md`](docs/GATE2_READINESS.md)). `[RUNTIME PROVEN]`
 - Signed out-of-tree modules (`mt7925-common.ko`, `mt7925e.ko`) loaded and accepted under Secure Boot. `[RUNTIME PROVEN]`
 - MT7925 PCI adapter bound cleanly (`ASIC revision: 79250000`, `HW/SW Version: 0x8a108a10`). `[RUNTIME PROVEN]`
 - Primary SSH route uses wired Ethernet (`eno1`, metric 100). SSH remained 100% active throughout driver replacement. `[RUNTIME PROVEN]`
@@ -66,6 +69,8 @@ Gate 1 driver replacement is RUNTIME PROVEN.
 
 Reboot post-mortem complete: `ath9k_htc` USB dongle identified as root cause of shutdown hang.
 
-Next milestone: Unbind/disconnect secondary `ath9k_htc` USB dongle and execute Gate 2 (Patch v3 DebugFS ICAP trigger validation).
+Gate 2 readiness, risk register, and technical debt analysis complete in `docs/GATE2_READINESS.md`.
+
+Next milestone: Await parallel `ath9k_htc` investigation completion, then execute Gate 2 (Patch v3 DebugFS ICAP trigger validation).
 
 Actual CSI extraction is not proven.
