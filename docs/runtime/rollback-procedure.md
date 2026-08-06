@@ -22,9 +22,9 @@ This document specifies the dual-layer automated rollback system designed to pro
 
 ## 2. Safety Scripts
 
-- **`tools/runtime/prepare-rollback.sh <timeout_sec>`:** Checks stock module availability and launches background timer daemon.
-- **`tools/runtime/cancel-rollback.sh`:** Signals test success and disarms rollback timer.
-- **`tools/runtime/rollback-mt7925.sh`:** Manual direct emergency recovery script.
+- **`tools/runtime/prepare-rollback.sh <timeout_sec>`:** Systemd-independent background recovery daemon. Verifies stock in-tree modules and arms timer.
+- **`tools/runtime/cancel-rollback.sh`:** Signals test success and disarms rollback daemon cleanly.
+- **`tools/runtime/rollback-mt7925.sh`:** Idempotent, fail-closed emergency recovery script. Restores stock in-tree modules.
 
 ---
 

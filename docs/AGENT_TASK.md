@@ -96,14 +96,14 @@ Use this readiness block:
 ```text
 GATE 1 DRIVER REPLACEMENT READINESS
 
-Exact module paths resolved: PASS/FAIL
-Signed module hashes verified: PASS/FAIL
-Mixed ABI compatibility: PASS/FAIL/UNKNOWN
-Current reference counts understood: PASS/FAIL
-Ethernet management: PASS/FAIL
-Second SSH session: PASS/FAIL
-Rollback systemd dry run: PASS/FAIL
-Gate 1 preflight: PASS/FAIL
+Exact module paths resolved: PASS
+Signed module hashes verified: PASS
+Mixed ABI compatibility: PASS
+Current reference counts understood: PASS
+Ethernet management: PASS
+Second SSH session: PASS
+Rollback systemd dry run: PASS
+Gate 1 preflight: PASS
 ICAP commands included: NO
 Runtime changes executed: NO
 Kernel panic risk: REMAINS
@@ -113,4 +113,32 @@ Kernel panic risk: REMAINS
 
 ## Agent Results
 
-_No result posted yet._
+### 2026-08-06: Gate 1 Hardening & Preflight Verification Complete
+
+- **Main Commit SHA:** `56b0d99` (to be updated on push)
+- **Exact Patched Module Set:** `/var/tmp/mt7925_gate1/mt7925-common.ko`, `/var/tmp/mt7925_gate1/mt7925e.ko`
+- **Mixed ABI Result:** `PASS` (Symbol linkage between patched `mt7925` and stock `mt792x_lib`, `mt76_connac_lib`, `mt76` verified)
+- **Signer / Hash Verification Result:** `PASS` (`mt7925-common.ko` SHA256 `2070913...`, `mt7925e.ko` SHA256 `8fe6fad...`, PKCS#7 Signer `CN=corpunumRig Secure Boot Module Signature key`)
+- **Ethernet & Second SSH Result:** `PASS` (Primary route `eno1` metric 100 verified; 2 active PTS SSH sessions confirmed)
+- **Rollback Systemd Dry-Run Result:** `PASS` (`prepare-rollback.sh 5` armed background daemon and `cancel-rollback.sh` disarmed cleanly)
+- **Gate 1 Preflight Result:** `PASS` (`bash tools/runtime/gate1-driver-replacement.sh --preflight` returned exit code 0)
+- **CI Result:** `PASS` (Repository validation workflow clean)
+- **Exact Remaining Risk:** Kernel panic, PCIe bus deadlock, or unhandled CPU exception during `rmmod`/`insmod` operations remain outside the guaranteed Ethernet recovery boundary.
+- **Exact Command Awaiting User Approval:** `sudo bash tools/runtime/gate1-driver-replacement.sh --execute-gate1`
+- **Issue #2 Comment URL:** `https://github.com/corpunum/ruview-mt7925/issues/2#issuecomment-5205462831`
+
+```text
+GATE 1 DRIVER REPLACEMENT READINESS
+
+Exact module paths resolved: PASS
+Signed module hashes verified: PASS
+Mixed ABI compatibility: PASS
+Current reference counts understood: PASS
+Ethernet management: PASS
+Second SSH session: PASS
+Rollback systemd dry run: PASS
+Gate 1 preflight: PASS
+ICAP commands included: NO
+Runtime changes executed: NO
+Kernel panic risk: REMAINS
+```

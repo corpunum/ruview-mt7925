@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Safety & Rollback Preparation Script for MT7925 Testing
-# Usage: sudo bash tools/runtime/prepare-rollback.sh
+# Usage: sudo bash tools/runtime/prepare-rollback.sh [timeout_sec]
 
 set -euo pipefail
 
@@ -19,7 +19,7 @@ fi
 
 echo "[+] Stock module verification PASSED." | tee -a "$LOG_FILE"
 
-# Launch background systemd-run or asynchronous timer daemon
+# Launch background systemd-independent recovery daemon
 (
     sleep "$TIMEOUT_SEC"
     if [ ! -f "$CANCEL_FLAG" ]; then
