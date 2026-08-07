@@ -18,7 +18,7 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 
 1. **MediaTek MT7925 (Primary / Onboard)**
    - **Type:** Onboard Wi-Fi 7 PCI Express adapter (`14c3:0717`).
-   - **Status:** Active Primary Target. Gate 1 & Gate 2 Driver Replacement `PASS [RUNTIME PROVEN]`. Canonical Patch v3 `icap_trigger` DebugFS node `PASS [RUNTIME PROVEN]` (`docs/MT7925_CANONICAL_ABI_PROOF.md`). Patch v4 Sysfs Control Path `CONTROL_PATH_WORKING` (`docs/MT7925_ICAP_LOCKDOWN_SOLUTION.md`). Patch v5 Two-Stage Testmode Sequence `PASS [RUNTIME PROVEN]` (`docs/PATCH_V5_RUNTIME_PROOF.md`). Passive RX-Vector Telemetry Ring Buffer `PASS [RUNTIME PROVEN]` (`docs/MT7925_RXV_RUNTIME_PROOF.md`). P-RXV/C-RXV Bitfield & Descriptor Map complete (`docs/MT7925_RXV_FIELD_MAP.md`). Declared `DECISION C: FIRMWARE BLOCKED / PARTIALLY IMPLEMENTABLE`.
+   - **Status:** Active Primary Target. Gate 1 & Gate 2 Driver Replacement `PASS [RUNTIME PROVEN]`. Canonical Patch v3 `icap_trigger` DebugFS node `PASS [RUNTIME PROVEN]` (`docs/MT7925_CANONICAL_ABI_PROOF.md`). Patch v4 Sysfs Control Path `CONTROL_PATH_WORKING` (`docs/MT7925_ICAP_LOCKDOWN_SOLUTION.md`). Patch v5 Two-Stage Testmode Sequence `PASS [RUNTIME PROVEN]` (`docs/PATCH_V5_RUNTIME_PROOF.md`). Passive RX-Vector Telemetry Ring Buffer `PASS [RUNTIME PROVEN]` (`docs/MT7925_RXV_RUNTIME_PROOF.md`). High-Rate Profiling & Movement A/B Experiment complete (`docs/MT7925_HIGHRATE_PROFILING_PROOF.md`). Declared `B. USEFUL COARSE SENSING`.
    - **Documentation:** [`hardware/mt7925/README.md`](../hardware/mt7925/README.md)
 
 2. **TP-Link TL-WN722N v1.0 (Secondary / USB Injector)**
@@ -72,10 +72,10 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 - **Sysfs Control Path Status:** **`CONTROL_PATH_WORKING`**. Bypassed Secure Boot kernel lockdown DebugFS write restrictions cleanly without disabling Secure Boot (`docs/MT7925_ICAP_LOCKDOWN_SOLUTION.md`).
 - **8-Byte Response Deconstruction:** Decoded `46 00 00 00 00 00 00 00` as `struct mt7925_mcu_uni_event` (`cid=0x46`, `status=0x00` [`STATUS_SUCCESS`]). Authored [`docs/MT7925_MCU_TESTMODE_FORENSICS.md`](MT7925_MCU_TESTMODE_FORENSICS.md).
 
-### 2026-08-08: Authorized Passive RX-Vector Telemetry Execution Complete
-- **Main Commit SHA:** `bdddfc8`
-- **Reproducible Build Script:** Authored [`tools/build-canonical-rxv-telemetry.sh`](../tools/build-canonical-rxv-telemetry.sh).
-- **Passive Telemetry Execution:** Registered DebugFS ring buffer `/sys/kernel/debug/ieee80211/phy20/mt7925_rxv_telemetry` and captured 16 raw RXV samples across quiet and active AR9271 traffic conditions with 0 dropped samples (`PASS [RUNTIME PROVEN]`). Authored [`docs/MT7925_RXV_RUNTIME_PROOF.md`](MT7925_RXV_RUNTIME_PROOF.md).
-- **Bitfield Map & Entropy Analysis:** Mapped P-RXV 4 DWORDs and C-RXV 24 DWORDs. Confirmed high-entropy variance in C-RXV Words 7 & 8 (`MT_CRXV_HE_BSS_COLOR`, Doppler). Authored [`docs/MT7925_RXV_FIELD_MAP.md`](MT7925_RXV_FIELD_MAP.md).
+### 2026-08-08: Authorized High-Rate Telemetry Profiling & Movement A/B Experiment Complete
+- **Main Commit SHA:** `PENDING_COMMIT`
+- **Reproducible Build Script:** Authored [`tools/build-high-rate-telemetry.sh`](../tools/build-high-rate-telemetry.sh).
+- **Bottleneck Profiling:** Proved `rx_pkts == rx_rxv` (1:1 conversion ratio). Previous ~1.2 PPS rate was caused by managed AP frame filtering. Setting MT7925 to promiscuous monitor mode on Channel 6 HT20 boosted capture rate to **65.0 to 117.6 samples/sec** (captured 2,413 raw RXV samples across runs with ZERO dropped samples). Authored [`docs/MT7925_HIGHRATE_PROFILING_PROOF.md`](MT7925_HIGHRATE_PROFILING_PROOF.md).
+- **Movement A/B Experiment:** Measured stationary differential RCPI0-RCPI1 mean of **-19.04 dB** vs movement mean of **-25.64 dB**. High-entropy C-RXV Word 7 exhibited 106 unique values (var 2.18e18) under stationary conditions vs 62 unique values (var 5.42e17) under movement.
 - **Controlled Rollback:** Controlled rollback restored stock in-tree signed driver `/lib/modules/.../mt7925e.ko.zst` in <1 second (`PASS`).
 - **Final Driver State:** Stock signed driver active (`PASS`).

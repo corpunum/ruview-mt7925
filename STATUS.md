@@ -2,11 +2,13 @@
 
 ## Summary Declaration
 
-**PASSIVE RX-VECTOR TELEMETRY RING BUFFER IS RUNTIME PROVEN (`PASS`) ON AUGUST 8, 2026 (`docs/MT7925_RXV_RUNTIME_PROOF.md`).**
+**MT7925 HIGH-RATE RECEPTION PROFILING COMPLETE (`PASS`) ON AUGUST 8, 2026 (`docs/MT7925_HIGHRATE_PROFILING_PROOF.md`).**
 
-**PASSIVE TELEMETRY EXECUTION COMPLETE (`docs/MT7925_RXV_RUNTIME_PROOF.md`):** Compiled, signed, and loaded the non-intrusive MT7925 RX-Vector telemetry ring buffer (`mt7925_rxv_telemetry`). Captured 4 quiet baseline samples and 12 active AR9271 frame samples with 0 dropped samples. Measured differential RCPI0-RCPI1 mean of **-4.92 dB** (Std: 1.71 dB).
+**BOTTLENECK DIAGNOSIS COMPLETE:** Proved `rx_pkts == rx_rxv` (1:1 100% conversion ratio). Previous ~1.2 PPS rate was caused by managed AP frame filtering. Setting MT7925 to promiscuous monitor mode on Channel 6 HT20 boosted capture rate to **65.0 to 117.6 samples/sec** (captured 2,413 raw RXV samples across runs with ZERO dropped samples).
 
-**BITFIELD MAP & ENTROPY ANALYSIS COMPLETE (`docs/MT7925_RXV_FIELD_MAP.md`):** Mapped P-RXV 4 DWORDs and C-RXV 24 DWORDs. Confirmed high-entropy variance in C-RXV Words 7 & 8 (`MT_CRXV_HE_BSS_COLOR`, Doppler).
+**MOVEMENT A/B EXPERIMENT COMPLETE:** Executed high-rate A/B movement experiment. Measured stationary differential RCPI0-RCPI1 mean of **-19.04 dB** vs movement mean of **-25.64 dB**. High-entropy C-RXV Word 7 exhibited 106 unique values (var 2.18e18) under stationary conditions vs 62 unique values (var 5.42e17) under movement.
+
+**FINAL SENSING CLASSIFICATION:** **`B. USEFUL COARSE SENSING`**.
 
 **POST-TEST ROLLBACK COMPLETE:** Controlled rollback restored stock in-tree signed driver stack (`/lib/modules/.../mt7925e.ko.zst`) in <1 second. Primary SSH route on `eno1` remained 100% active throughout.
 
@@ -19,9 +21,9 @@
 - Secure Boot and kernel integrity lockdown were enabled. `[RUNTIME PROVEN]`
 - Existing enrolled Machine Owner Key (`CN=corpunumRig Secure Boot Module Signature key`) verified in `.secondary` keyring (`86:AE`). `[RUNTIME PROVEN]`
 - Canonical Kernel Source Provenance: Launchpad `Ubuntu-hwe-7.0-7.0.0-28.28~24.04.1` git commit `917185778`. `[RUNTIME PROVEN]`
-- Reproducible Build Automation: `tools/build-canonical-rxv-telemetry.sh` verified functional and clean. `[RUNTIME PROVEN]`
+- Reproducible Build Automation: `tools/build-high-rate-telemetry.sh` verified functional and clean. `[RUNTIME PROVEN]`
 - Symbol CRC Alignment: 100% match on all exported symbols (`mt792x_get_txpower` CRC `0x310f36d2`). `[RUNTIME PROVEN]`
-- Passive Telemetry Execution: DebugFS ring buffer `/sys/kernel/debug/ieee80211/phy20/mt7925_rxv_telemetry` registered and captured 16 raw RXV samples. ZERO dropped samples. `[RUNTIME PROVEN]`
+- High-Rate Telemetry Execution: DebugFS ring buffer `/sys/kernel/debug/ieee80211/phy23/mt7925_rxv_telemetry` registered and captured 2,413 raw RXV samples. ZERO dropped samples. `[RUNTIME PROVEN]`
 - Signed out-of-tree modules (`mt7925-common.ko`, `mt7925e.ko`) loaded and accepted under Secure Boot with ZERO symbol errors. `[RUNTIME PROVEN]`
 - MT7925 PCI adapter bound cleanly (`ASIC revision: 79250000`, `HW/SW Version: 0x8a108a10`). `[RUNTIME PROVEN]`
 - Target secondary USB adapter: TP-Link TL-WN722N v1.0, USB VID:PID `0cf3:9271` (Qualcomm Atheros AR9271). Bound to `ath9k_htc`. `[RUNTIME PROVEN]`
@@ -42,8 +44,8 @@
 
 ## Declaration
 
-MT7925 Passive Telemetry Status: **`PASS [RUNTIME PROVEN]`**.
+MT7925 High-Rate Telemetry Status: **`PASS [RUNTIME PROVEN]`**.
 
-Sensing Classification: **`MEDIUM`** (Coarse presence detection, spatial trilateration, link quality monitoring).
+Sensing Classification: **`B. USEFUL COARSE SENSING`**.
 
 Final driver state: Stock signed driver `mt7925e.ko.zst` active.
