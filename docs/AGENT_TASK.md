@@ -73,7 +73,7 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 - **8-Byte Response Deconstruction:** Decoded `46 00 00 00 00 00 00 00` as `struct mt7925_mcu_uni_event` (`cid=0x46`, `status=0x00` [`STATUS_SUCCESS`]). Authored [`docs/MT7925_MCU_TESTMODE_FORENSICS.md`](MT7925_MCU_TESTMODE_FORENSICS.md).
 
 ### 2026-08-08: Authorized Passive RX-Vector Telemetry Execution Complete
-- **Main Commit SHA:** `PENDING_COMMIT`
+- **Main Commit SHA:** `bdddfc8`
 - **Reproducible Build Script:** Authored [`tools/build-canonical-rxv-telemetry.sh`](../tools/build-canonical-rxv-telemetry.sh).
 - **Passive Telemetry Execution:** Registered DebugFS ring buffer `/sys/kernel/debug/ieee80211/phy20/mt7925_rxv_telemetry` and captured 16 raw RXV samples across quiet and active AR9271 traffic conditions with 0 dropped samples (`PASS [RUNTIME PROVEN]`). Authored [`docs/MT7925_RXV_RUNTIME_PROOF.md`](MT7925_RXV_RUNTIME_PROOF.md).
 - **Bitfield Map & Entropy Analysis:** Mapped P-RXV 4 DWORDs and C-RXV 24 DWORDs. Confirmed high-entropy variance in C-RXV Words 7 & 8 (`MT_CRXV_HE_BSS_COLOR`, Doppler). Authored [`docs/MT7925_RXV_FIELD_MAP.md`](MT7925_RXV_FIELD_MAP.md).
