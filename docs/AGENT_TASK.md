@@ -65,7 +65,7 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 - **Runtime Load Result:** Rejected by kernel with `Unknown symbol mt792x_get_txpower (err -2)` due to kernel ABI symbol CRC mismatch (`PATCH_V3_RUNTIME_FAILED`). Authored [`docs/PATCH_V3_RUNTIME_PROOF.md`](PATCH_V3_RUNTIME_PROOF.md).
 
 ### 2026-08-07: Phase 1 ABI Forensics & Dependency Tree Complete
-- **Main Commit SHA:** `PENDING_COMMIT`
+- **Main Commit SHA:** `2dd942d`
 - **Kernel Configuration:** `CONFIG_MODVERSIONS=y`, `CONFIG_MODULE_SIG=y`, `CONFIG_MODULE_SIG_ALL=y`, `CONFIG_MODULE_SIG_HASH="sha512"`.
 - **Dependency Graph:** `cfg80211` -> `mac80211` -> `mt76` -> `mt76-connac-lib` -> `mt792x-lib` -> `mt7925-common` -> `mt7925e`.
 - **Root Cause Diagnosis:** Building upstream `openwrt/mt76` out-of-tree without rebuilding all 5 interdependent modules (`mt76`, `mt76-connac-lib`, `mt792x-lib`, `mt7925-common`, `mt7925e`) causes symbol CRC checksum divergence against Ubuntu `7.0.0-28-generic` stock headers.
