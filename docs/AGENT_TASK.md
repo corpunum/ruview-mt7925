@@ -68,7 +68,7 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 - **Controlled Rollback:** Controlled rollback restored stock in-tree signed driver `/lib/modules/.../mt7925e.ko.zst` in <1 second (`PASS`). Authored [`docs/MT7925_CANONICAL_ABI_PROOF.md`](MT7925_CANONICAL_ABI_PROOF.md).
 
 ### 2026-08-07: Patch v4 Sysfs Control Path & Controlled RF Experiment Complete
-- **Main Commit SHA:** `PENDING_COMMIT`
+- **Main Commit SHA:** `f40cf0e`
 - **Reproducible Build Script:** Authored [`tools/build-canonical-patch-v4.sh`](../tools/build-canonical-patch-v4.sh).
 - **Patch v4 Implementation:** Added `mt7925_icap_trigger` sysfs device attribute (`--w-------`) under `wiphy->dev.kobj` in `mt7925/init.c`.
 - **Sysfs Control Path Status:** **`CONTROL_PATH_WORKING`**. Bypassed Secure Boot kernel lockdown DebugFS write restrictions cleanly without disabling Secure Boot (`docs/MT7925_ICAP_LOCKDOWN_SOLUTION.md`).
