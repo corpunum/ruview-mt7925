@@ -50,7 +50,7 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 - **Gate 2 Readiness Matrix:** Authored [`docs/GATE2_READINESS.md`](GATE2_READINESS.md).
 
 ### 2026-08-07: Phase 1-7 Hardware Discovery & CSI Comparison Complete
-- **Main Commit SHA:** `PENDING_COMMIT`
+- **Main Commit SHA:** `39ac52b`
 - **MT7925 Status:** Primary Target. `PCI ID: 14c3:0717`. Driver: `mt7925e`. Gate 1: `PASS [RUNTIME PROVEN]`. Gate 2: `READY_FOR_GATE2` (Preflight check verified `PASS`).
 - **TL-WN722N Status:** Secondary Target. `USB VID:PID: 0cf3:9271`. Chipset: Qualcomm Atheros AR9271. Hardware Revision: `v1.0 / v1.1 [RUNTIME PROVEN]`. Driver: `ath9k_htc`.
 - **CSI Path Selection:** **PRIMARY_CSI_PATH:** MediaTek MT7925 (Wi-Fi 7 2x2 MIMO). **SECONDARY_CSI_PATH:** TL-WN722N v1.0 (USB AR9271 1x1 SISO). Authored [`docs/CSI_PATH_COMPARISON.md`](CSI_PATH_COMPARISON.md).
