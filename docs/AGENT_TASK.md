@@ -73,7 +73,7 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 - **8-Byte Response Deconstruction:** Decoded `46 00 00 00 00 00 00 00` as `struct mt7925_mcu_uni_event` (`cid=0x46`, `status=0x00` [`STATUS_SUCCESS`]). Authored [`docs/MT7925_MCU_TESTMODE_FORENSICS.md`](MT7925_MCU_TESTMODE_FORENSICS.md).
 
 ### 2026-08-08: Passive RX-Vector Forensics & CSI Hardware Ecosystem Analysis Complete
-- **Main Commit SHA:** `PENDING_COMMIT`
+- **Main Commit SHA:** `8060577`
 - **Passive RX-Vector Analysis:** Traced MT7925 P-RXV and C-RXV hardware descriptors. Authored [`docs/MT7925_RX_VECTOR_ANALYSIS.md`](MT7925_RX_VECTOR_ANALYSIS.md).
 - **Passive Telemetry Patch Design:** Designed non-intrusive `dev_dbg` passive telemetry logging patch. Authored [`docs/MT7925_PASSIVE_TELEMETRY_DESIGN.md`](MT7925_PASSIVE_TELEMETRY_DESIGN.md).
 - **CSI Hardware Ecosystem Alternatives:** Analyzed sensing capabilities of scalar RX-Vector metrics vs true OFDM CSI. Documented open-source PCIe Atheros AR9580/AR9590 (`ath9k`) ecosystem. Authored [`docs/CSI_HARDWARE_ALTERNATIVES.md`](CSI_HARDWARE_ALTERNATIVES.md).
