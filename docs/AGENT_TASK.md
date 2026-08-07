@@ -73,7 +73,7 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 - **8-Byte Response Deconstruction:** Decoded `46 00 00 00 00 00 00 00` as `struct mt7925_mcu_uni_event` (`cid=0x46`, `status=0x00` [`STATUS_SUCCESS`]). Authored [`docs/MT7925_MCU_TESTMODE_FORENSICS.md`](MT7925_MCU_TESTMODE_FORENSICS.md).
 
 ### 2026-08-08: Authorized Patch v5 Two-Stage Testmode Execution Complete
-- **Main Commit SHA:** `PENDING_COMMIT`
+- **Main Commit SHA:** `3efe7d0`
 - **Reproducible Build Script:** Authored [`tools/build-canonical-patch-v5.sh`](../tools/build-canonical-patch-v5.sh).
 - **Patch v5 Execution:** All 4 MCU sequence stages (`Power Lock` -> `SWITCH_MODE_RF_TEST` -> `SWITCH_MODE_ICAP` -> `TESTMODE_RX_STAT Query`) executed cleanly without errors (`PASS [RUNTIME PROVEN]`).
 - **MCU Response Capture:** `MCU_UNI_QUERY(TESTMODE_RX_STAT)` returned an 8-byte status response header (`32 00 00 00 bb 00 00 c0`, SHA256 `90b16f39...`).
