@@ -6,7 +6,7 @@
 
 **POST-MORTEM INVESTIGATION COMPLETE (`docs/runtime/REBOOT_POSTMORTEM.md`):** The reboot hang observed after Gate 1 was **RUNTIME VERIFIED** to be caused by a firmware/WMI deadlock in the secondary USB Wi-Fi adapter (`ath9k_htc`), triggered by a global mac80211 regulatory domain update upon unloading MT7925. MT7925 and RuView code are **100% EXONERATED**.
 
-**PATCH V3 BUILD & SYMBOL PROVENANCE TESTED (`docs/PATCH_V3_RUNTIME_PROOF.md`):** Patch v3 source instrumentation was applied and statically verified inside `mt7925-common.ko` (`icap_trigger` symbols present). Runtime insertion encountered kernel ABI symbol CRC divergence (`Unknown symbol mt792x_get_txpower`). Automated rollback disarmed and cleanly restored stock signed driver stack (`/lib/modules/.../mt7925e.ko.zst`) in under 1 second. Zero system disruption occurred.
+**PHASE 1 ABI FORENSICS COMPLETE (`docs/MT76_ABI_ANALYSIS.md`):** Symbol CRC mismatch (`Unknown symbol mt792x_get_txpower`) was diagnosed. Building upstream `openwrt/mt76` out-of-tree without rebuilding all 5 interdependent modules (`mt76`, `mt76-connac-lib`, `mt792x-lib`, `mt7925-common`, `mt7925e`) causes symbol CRC checksum divergence against Ubuntu `7.0.0-28-generic` stock headers. Automated fail-closed rollback disarmed and cleanly restored stock signed driver stack (`/lib/modules/.../mt7925e.ko.zst`) in under 1 second. Zero system disruption occurred.
 
 ---
 
@@ -44,8 +44,8 @@
 
 Gate 1 & Gate 2 driver replacement are RUNTIME PROVEN.
 
-Patch v3 Build & Symbol Provenance analysis complete (`PATCH_V3_RUNTIME_FAILED` due to kernel ABI symbol CRC mismatch).
+Phase 1 ABI Forensics complete (`PATCH_V3_RUNTIME_FAILED` due to symbol CRC mismatch between out-of-tree `openwrt/mt76` and stock `mt792x-lib.ko`).
 
 Final driver state: Stock signed driver `mt7925e.ko.zst` active.
 
-Next milestone: Build full `mt76` stack matching Ubuntu kernel header symbol CRCs to expose `icap_trigger` DebugFS node.
+Next milestone: Build atomic 5-module replacement set (`mt76`, `mt76-connac-lib`, `mt792x-lib`, `mt7925-common`, `mt7925e`) directly against `linux-hwe-7.0-headers-7.0.0-28` to achieve `PATCH_V3_RUNTIME_PROVEN`.

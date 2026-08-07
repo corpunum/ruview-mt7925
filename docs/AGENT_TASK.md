@@ -18,7 +18,7 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 
 1. **MediaTek MT7925 (Primary / Onboard)**
    - **Type:** Onboard Wi-Fi 7 PCI Express adapter (`14c3:0717`).
-   - **Status:** Active Primary Target. Gate 1 & Gate 2 Driver Replacement `PASS [RUNTIME PROVEN]`. Patch v3 build provenance analyzed (`docs/PATCH_V3_RUNTIME_PROOF.md`).
+   - **Status:** Active Primary Target. Gate 1 & Gate 2 Driver Replacement `PASS [RUNTIME PROVEN]`. Phase 1 ABI Forensics Complete (`docs/MT76_ABI_ANALYSIS.md`).
    - **Documentation:** [`hardware/mt7925/README.md`](../hardware/mt7925/README.md)
 
 2. **TP-Link TL-WN722N v1.0 (Secondary / USB Injector)**
@@ -62,7 +62,12 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 - **Main Commit SHA:** `9015f68`
 - **Source Instrumentation:** Patch v3 applied to `mt7925/debugfs.c` (`mt7925_icap_trigger_set`, `fops_icap_trigger`).
 - **Static Binary Proof:** Symbol `icap_trigger` verified inside `debugfs.o` and `mt7925-common.ko` via `strings` (`PASS [STATICALLY VERIFIED]`).
-- **MOK Signature:** Signed via enrolled MOK key (`CN=corpunumRig Secure Boot Module Signature key`).
-- **Runtime Load Result:** Rejected by kernel with `Unknown symbol mt792x_get_txpower (err -2)` due to kernel ABI symbol CRC mismatch (`PATCH_V3_RUNTIME_FAILED`).
-- **Controlled Rollback:** Automated rollback mechanism caught `insmod` error and cleanly restored stock signed driver stack `/lib/modules/.../mt7925e.ko.zst` in <1 second (`PASS [RUNTIME PROVEN]`). Authored [`docs/PATCH_V3_RUNTIME_PROOF.md`](PATCH_V3_RUNTIME_PROOF.md).
+- **Runtime Load Result:** Rejected by kernel with `Unknown symbol mt792x_get_txpower (err -2)` due to kernel ABI symbol CRC mismatch (`PATCH_V3_RUNTIME_FAILED`). Authored [`docs/PATCH_V3_RUNTIME_PROOF.md`](PATCH_V3_RUNTIME_PROOF.md).
+
+### 2026-08-07: Phase 1 ABI Forensics & Dependency Tree Complete
+- **Main Commit SHA:** `PENDING_COMMIT`
+- **Kernel Configuration:** `CONFIG_MODVERSIONS=y`, `CONFIG_MODULE_SIG=y`, `CONFIG_MODULE_SIG_ALL=y`, `CONFIG_MODULE_SIG_HASH="sha512"`.
+- **Dependency Graph:** `cfg80211` -> `mac80211` -> `mt76` -> `mt76-connac-lib` -> `mt792x-lib` -> `mt7925-common` -> `mt7925e`.
+- **Root Cause Diagnosis:** Building upstream `openwrt/mt76` out-of-tree without rebuilding all 5 interdependent modules (`mt76`, `mt76-connac-lib`, `mt792x-lib`, `mt7925-common`, `mt7925e`) causes symbol CRC checksum divergence against Ubuntu `7.0.0-28-generic` stock headers.
+- **ABI Forensics Document:** Authored [`docs/MT76_ABI_ANALYSIS.md`](MT76_ABI_ANALYSIS.md).
 - **Final Driver State:** Stock signed driver active (`PASS`).
