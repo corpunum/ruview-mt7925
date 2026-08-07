@@ -50,7 +50,7 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 - **Gate 2 Readiness Matrix:** Authored [`docs/GATE2_READINESS.md`](GATE2_READINESS.md).
 
 ### 2026-08-07: AR9271 CSI Firmware Analysis & Feasibility Complete
-- **Main Commit SHA:** `PENDING_COMMIT`
+- **Main Commit SHA:** `963d558`
 - **AR9271 Firmware Backup:** Stock firmware `/lib/firmware/ath9k_htc/htc_9271-1.4.0.fw.zst` backed up to `/tmp/ar9271_stock_backup/` (`SHA256 1ec4cdf426d32602034cb4731b618155911b4afc863b7e0d19407937cbd1c2a2`).
 - **AR9271 CSI Feasibility Result:** **`CSI_RUNTIME_FAILED`**. Open-source Atheros CSI Tool (`ar9003_csi.ko`) requires PCI/PCIe chipsets (`AR9344`, `AR9580`, `AR9590`); USB `ath9k_htc` architecture does not expose raw OFDM subcarrier CSI matrices over HTC queues. Authored [`docs/AR9271_CSI_ANALYSIS.md`](AR9271_CSI_ANALYSIS.md).
 - **MT7925 Gate 2 Status:** **`READY_FOR_GATE2`**. Re-verified preflight (`PASS`).
