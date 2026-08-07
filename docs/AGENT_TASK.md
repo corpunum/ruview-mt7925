@@ -59,7 +59,7 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 - **Gate 2 Execution Status:** **PASS `[RUNTIME PROVEN]`** ([`docs/GATE2_RESULTS.md`](GATE2_RESULTS.md)).
 
 ### 2026-08-07: Canonical-Based Patch v3 Runtime Proof Complete
-- **Main Commit SHA:** `PENDING_COMMIT`
+- **Main Commit SHA:** `43001fe`
 - **Canonical Source Provenance:** Launchpad `Ubuntu-hwe-7.0-7.0.0-28.28~24.04.1` (commit `917185778`).
 - **Symbol CRC Alignment:** 100% match on all exported symbols (`mt792x_get_txpower` CRC `0x310f36d2`).
 - **MOK Signature:** MOK signed via enrolled key (`CN=corpunumRig Secure Boot Module Signature key`).
