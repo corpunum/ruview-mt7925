@@ -6,7 +6,7 @@
 
 **POST-MORTEM INVESTIGATION COMPLETE (`docs/runtime/REBOOT_POSTMORTEM.md`):** The reboot hang observed after Gate 1 was **RUNTIME VERIFIED** to be caused by a firmware/WMI deadlock in the secondary USB Wi-Fi adapter (`ath9k_htc`), triggered by a global mac80211 regulatory domain update upon unloading MT7925. MT7925 and RuView code are **100% EXONERATED**.
 
-**DUAL HARDWARE SENSING PLATFORM ESTABLISHED:** RuView formally tracks two hardware backends: Primary Onboard MediaTek MT7925 (Wi-Fi 7 PCIe) and Secondary External TP-Link TL-WDR3600 v1.x (Atheros CSI reference).
+**HARDWARE DISCOVERY & INVENTORY COMPLETE (`docs/HARDWARE_INVENTORY.md`):** Electronic discovery identified onboard MT7925 (`14c3:0717`), secondary AR9271 USB dongle (`0cf3:9271`), and upstream network topology.
 
 ---
 
@@ -32,8 +32,8 @@
 - Secondary Target Firmware Build: OpenWrt 18.06 SquashFS image targeting TP-Link TL-WDR3600 v1.x built cleanly (`hardware/tl-wdr3600/README.md`). `[STATICALLY VERIFIED]`
 - Factory image SHA256: `546569477ff01721002d49157b25185663508793d159bbedbea1c1f509641fd8`. `[STATICALLY VERIFIED]`
 - Sysupgrade image SHA256: `08117b6798add73c01aea7a8e04845b2dd3a8f74595542e3c52a9c090c8d84a3`. `[STATICALLY VERIFIED]`
-- Atheros CSI kernel module (`ar9003_csi.ko`) and user-space logger (`recvCSI`) integrated in build tree. `[STATICALLY VERIFIED]`
-- WDR3600 Flashing Verdict: **`NOT_READY_FOR_FLASH`** (Requires physical router verification and revision sticker check). `[STATICALLY VERIFIED]`
+- Atheros CSI kernel module (`ar9003_csi.ko`) integrated in rootfs image. `[STATICALLY VERIFIED]`
+- WDR3600 Electronic Status: **`MODEL_CONFIRMED_REVISION_UNKNOWN`** (Requires physical router sticker / serial check). `[STATICALLY VERIFIED]`
 
 ---
 
@@ -46,10 +46,10 @@
 
 ## Declaration
 
-Gate 1 driver replacement is RUNTIME PROVEN.
+Gate 1 driver replacement is RUNTIME PROVEN. MT7925 Gate 2 is READY.
 
-Secondary TL-WDR3600 firmware is STATICALLY VERIFIED (`NOT_READY_FOR_FLASH`).
+Secondary TL-WDR3600 status: MODEL_CONFIRMED_REVISION_UNKNOWN (`NOT_READY_FOR_FLASH`).
 
-Next milestone: Execute Gate 2 (Patch v3 DebugFS ICAP trigger validation) after explicit user authorization.
+Next milestone: Await explicit user authorization for MT7925 Gate 2 execution.
 
 Actual CSI extraction is not proven on either device.
