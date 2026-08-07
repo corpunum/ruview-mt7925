@@ -48,7 +48,7 @@ Do **not** flash WDR3600 router without physical verification.
 - **Gate 2 Readiness Matrix:** Authored [`docs/GATE2_READINESS.md`](GATE2_READINESS.md).
 
 ### 2026-08-07: Dual Hardware Integration & WDR3600 Forensic Audit Complete
-- **Main Commit SHA:** `PENDING_COMMIT`
+- **Main Commit SHA:** `4eabe06`
 - **MT7925 Current Status:** Primary target; Gate 1 `PASS [RUNTIME PROVEN]`; Gate 2 ready.
 - **TL-WDR3600 Current Status:** Secondary reference target; OpenWrt firmware compiled `[STATICALLY VERIFIED]`; Flashing status `NOT_READY_FOR_FLASH`.
 - **WDR3600 Factory Image SHA256:** `546569477ff01721002d49157b25185663508793d159bbedbea1c1f509641fd8`
