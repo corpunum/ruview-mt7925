@@ -55,7 +55,7 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 - **AR9271 CSI Feasibility Result:** **`CSI_RUNTIME_FAILED`**. Open-source Atheros CSI Tool (`ar9003_csi.ko`) requires PCI/PCIe chipsets (`AR9344`, `AR9580`, `AR9590`); USB `ath9k_htc` architecture does not expose raw OFDM subcarrier CSI matrices over HTC queues. Authored [`docs/AR9271_CSI_ANALYSIS.md`](AR9271_CSI_ANALYSIS.md).
 
 ### 2026-08-07: Authorized Gate 2 Driver Replacement Execution Complete
-- **Main Commit SHA:** `PENDING_COMMIT`
+- **Main Commit SHA:** `11195b2`
 - **User Authorization:** Explicitly authorized by user prompt.
 - **USB Isolation:** Safe USB sysfs unbind executed prior to test (`echo 3-2:1.0 > /sys/bus/usb/drivers/ath9k_htc/unbind`). Zero `ath9k_htc` WMI deadlock during MT7925 replacement (`PASS`).
 - **Gate 2 Execution Status:** **PASS `[RUNTIME PROVEN]`** ([`docs/GATE2_RESULTS.md`](GATE2_RESULTS.md)).
