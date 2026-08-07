@@ -73,7 +73,7 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 - **8-Byte Response Deconstruction:** Decoded `46 00 00 00 00 00 00 00` as `struct mt7925_mcu_uni_event` (`cid=0x46`, `status=0x00` [`STATUS_SUCCESS`]). Authored [`docs/MT7925_MCU_TESTMODE_FORENSICS.md`](MT7925_MCU_TESTMODE_FORENSICS.md).
 
 ### 2026-08-08: ICAP Implementation Mapping & Patch v6 Design Complete
-- **Main Commit SHA:** `PENDING_COMMIT`
+- **Main Commit SHA:** `ba3d6c1`
 - **Implementation Mapping:** Mapped MT7915 vs MT7996 vs MT7921 vs MT7925 source components. Authored [`docs/MT7925_ICAP_IMPLEMENTATION_MAP.md`](MT7925_ICAP_IMPLEMENTATION_MAP.md).
 - **Critical Decision:** **`DECISION C: FIRMWARE BLOCKED / PARTIALLY IMPLEMENTABLE`**.
 - **WiFiSpectrum Analysis:** `MT7925_TM_WIFISPECTRUM` is a dead header enum in `mcu.h:104` with zero supporting logic.
