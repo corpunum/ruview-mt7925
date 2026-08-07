@@ -4,9 +4,9 @@
 
 **PATCH V5 TWO-STAGE TESTMODE SEQUENCE IS RUNTIME PROVEN (`STATUS_ONLY` / `CSI_NOT_PROVEN`) ON AUGUST 8, 2026 (`docs/PATCH_V5_RUNTIME_PROOF.md`).**
 
-**STATE MACHINE FORENSICS COMPLETE (`docs/MT7925_ICAP_STATE_MACHINE.md`):** Deconstructed the 8-byte status response header (`32 00 00 00 bb 00 00 c0`) and active-RF `-110` (`-ETIMEDOUT`) MCU queue timeout. Proved that synchronous RPC query returns status headers while raw capture matrices require a multi-stage ATE state machine + DMA ring consumer. Patch v6 runtime experimentation is currently **`NOT JUSTIFIED`**.
+**SOURCE IMPLEMENTATION MAP COMPLETE (`docs/MT7925_ICAP_IMPLEMENTATION_MAP.md`):** Deeply traced MediaTek mt76 reference sources (`mt7915`, `mt7996`, `mt7921`, `mt7925`). Formally declared **`DECISION C: FIRMWARE BLOCKED / PARTIALLY IMPLEMENTABLE`**.
 
-**REPRODUCIBLE BUILD AUTOMATION COMPLETE (`tools/build-canonical-patch-v5.sh`):** Created and verified 100% reproducible build script `tools/build-canonical-patch-v5.sh` compiled directly against Launchpad Canonical source (`Ubuntu-hwe-7.0-7.0.0-28.28~24.04.1`).
+**PATCH V6 MINIMUM DESIGN SPECIFICATION COMPLETE (`docs/PATCH_V6_DESIGN.md`):** Authored non-executable minimum design specification for passive RX-Vector channel metric extraction. Execution status: **`NOT_EXECUTED`** (Prohibited per user directive).
 
 **POST-TEST ROLLBACK COMPLETE:** Controlled rollback restored stock in-tree signed driver stack (`/lib/modules/.../mt7925e.ko.zst`) in <1 second. Primary SSH route on `eno1` remained 100% active throughout.
 
@@ -45,8 +45,8 @@
 
 Patch v5 Two-Stage Testmode Sequence is **`PASS [RUNTIME PROVEN]`**.
 
-State Machine Forensics: **`COMPLETE`** (`docs/MT7925_ICAP_STATE_MACHINE.md`).
+Implementation Mapping: **`DECISION C: FIRMWARE BLOCKED / PARTIALLY IMPLEMENTABLE`**.
 
-Patch v6 Execution: **`NOT JUSTIFIED`**.
+Patch v6 Status: **`DESIGN COMPLETE (NOT EXECUTED)`**.
 
 Final driver state: Stock signed driver `mt7925e.ko.zst` active.
