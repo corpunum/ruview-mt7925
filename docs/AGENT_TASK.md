@@ -73,7 +73,7 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 - **8-Byte Response Deconstruction:** Decoded `46 00 00 00 00 00 00 00` as `struct mt7925_mcu_uni_event` (`cid=0x46`, `status=0x00` [`STATUS_SUCCESS`]). Authored [`docs/MT7925_MCU_TESTMODE_FORENSICS.md`](MT7925_MCU_TESTMODE_FORENSICS.md).
 
 ### 2026-08-08: Authorized High-Rate Telemetry Profiling & Movement A/B Experiment Complete
-- **Main Commit SHA:** `PENDING_COMMIT`
+- **Main Commit SHA:** `2fea3b1`
 - **Reproducible Build Script:** Authored [`tools/build-high-rate-telemetry.sh`](../tools/build-high-rate-telemetry.sh).
 - **Bottleneck Profiling:** Proved `rx_pkts == rx_rxv` (1:1 conversion ratio). Previous ~1.2 PPS rate was caused by managed AP frame filtering. Setting MT7925 to promiscuous monitor mode on Channel 6 HT20 boosted capture rate to **65.0 to 117.6 samples/sec** (captured 2,413 raw RXV samples across runs with ZERO dropped samples). Authored [`docs/MT7925_HIGHRATE_PROFILING_PROOF.md`](MT7925_HIGHRATE_PROFILING_PROOF.md).
 - **Movement A/B Experiment:** Measured stationary differential RCPI0-RCPI1 mean of **-19.04 dB** vs movement mean of **-25.64 dB**. High-entropy C-RXV Word 7 exhibited 106 unique values (var 2.18e18) under stationary conditions vs 62 unique values (var 5.42e17) under movement.
