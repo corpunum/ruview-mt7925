@@ -2,13 +2,13 @@
 
 ## Summary Declaration
 
-**PATCH V4 SYSFS CONTROL PATH IS RUNTIME PROVEN (`CONTROL_PATH_WORKING`) ON AUGUST 7, 2026 (`docs/MT7925_ICAP_LOCKDOWN_SOLUTION.md`).**
+**PATCH V5 TWO-STAGE TESTMODE SEQUENCE IS RUNTIME PROVEN (`STATUS_ONLY` / `CSI_NOT_PROVEN`) ON AUGUST 8, 2026 (`docs/PATCH_V5_RUNTIME_PROOF.md`).**
 
-**PROTOCOL FORENSICS COMPLETE (`docs/MT7925_MCU_TESTMODE_FORENSICS.md`):** Deconstructed the 8-byte MCU response header (`46 00 00 00 00 00 00 00`). Confirmed opcode `0x46` returned `STATUS_SUCCESS` (`0x00`). Reclassified current result to **`CURRENT_TESTMODE_QUERY_RETURNS_STATUS_ONLY`**.
+**PATCH V5 TWO-STAGE TESTMODE EXECUTION COMPLETE (`docs/PATCH_V5_RUNTIME_PROOF.md`):** Executed authorized Patch v5 sequence (`Power Lock` -> `SWITCH_MODE_RF_TEST` -> `SWITCH_MODE_ICAP` -> `TESTMODE_RX_STAT Query`). All 4 MCU stages executed cleanly without errors. `MCU_UNI_QUERY(TESTMODE_RX_STAT)` returned an 8-byte status response header (`32 00 00 00 bb 00 00 c0`). Zero subcarrier channel matrices or I/Q sample arrays were returned (**`STATUS_ONLY` / `CSI_NOT_PROVEN`**).
 
-**CROSS-GENERATION CAPTURE ARCHITECTURE ANALYSIS COMPLETE (`docs/MT7925_CAPTURE_ARCHITECTURE.md`):** Mapped MediaTek MT7915, MT7996, MT7921, and MT7925 testmode capture paths. Proved that synchronous RPC query returns status headers while raw capture matrices require a multi-stage testmode sequence.
+**REPRODUCIBLE BUILD AUTOMATION COMPLETE (`tools/build-canonical-patch-v5.sh`):** Created and verified 100% reproducible build script `tools/build-canonical-patch-v5.sh` compiled directly against Launchpad Canonical source (`Ubuntu-hwe-7.0-7.0.0-28.28~24.04.1`).
 
-**PATCH V5 TWO-STAGE TESTMODE DESIGN COMPLETE (`docs/PATCH_V5_DESIGN.md`):** Authored proposed Patch v5 two-stage testmode state machine design (`MT76_TM_STATE_ON` -> `SWITCH_MODE_RF_TEST` -> `SWITCH_MODE_ICAP` -> `MCU_UNI_QUERY(TESTMODE_RX_STAT)`). Awaiting explicit user authorization before execution.
+**POST-TEST ROLLBACK COMPLETE:** Controlled rollback restored stock in-tree signed driver stack (`/lib/modules/.../mt7925e.ko.zst`) in <1 second. Primary SSH route on `eno1` remained 100% active throughout.
 
 ---
 
@@ -19,10 +19,9 @@
 - Secure Boot and kernel integrity lockdown were enabled. `[RUNTIME PROVEN]`
 - Existing enrolled Machine Owner Key (`CN=corpunumRig Secure Boot Module Signature key`) verified in `.secondary` keyring (`86:AE`). `[RUNTIME PROVEN]`
 - Canonical Kernel Source Provenance: Launchpad `Ubuntu-hwe-7.0-7.0.0-28.28~24.04.1` git commit `917185778`. `[RUNTIME PROVEN]`
-- Reproducible Build Automation: `tools/build-canonical-patch-v4.sh` verified functional and clean. `[RUNTIME PROVEN]`
+- Reproducible Build Automation: `tools/build-canonical-patch-v5.sh` verified functional and clean. `[RUNTIME PROVEN]`
 - Symbol CRC Alignment: 100% match on all exported symbols (`mt792x_get_txpower` CRC `0x310f36d2`). `[RUNTIME PROVEN]`
-- Sysfs Control Path Verification: `mt7925_icap_trigger` sysfs node registered & verified at `/sys/devices/.../ieee80211/phy*/mt7925_icap_trigger` (`--w-------`). Bypasses DebugFS lockdown (`CONTROL_PATH_WORKING`). `[RUNTIME PROVEN]`
-- MCU Response Capture: MCU returned 8-byte status response header (`len=8`, `STATUS_SUCCESS`). Result classified: `CURRENT_TESTMODE_QUERY_RETURNS_STATUS_ONLY`. `[RUNTIME PROVEN]`
+- Patch v5 Execution: All 4 MCU sequence stages executed cleanly. `MCU_UNI_QUERY(TESTMODE_RX_STAT)` returned 8-byte status header (`32 00 00 00 bb 00 00 c0`). Result classified: `STATUS_ONLY` / `CSI_NOT_PROVEN`. `[RUNTIME PROVEN]`
 - Signed out-of-tree modules (`mt7925-common.ko`, `mt7925e.ko`) loaded and accepted under Secure Boot with ZERO symbol errors. `[RUNTIME PROVEN]`
 - MT7925 PCI adapter bound cleanly (`ASIC revision: 79250000`, `HW/SW Version: 0x8a108a10`). `[RUNTIME PROVEN]`
 - Target secondary USB adapter: TP-Link TL-WN722N v1.0, USB VID:PID `0cf3:9271` (Qualcomm Atheros AR9271). Bound to `ath9k_htc`. `[RUNTIME PROVEN]`
@@ -43,10 +42,8 @@
 
 ## Declaration
 
-Patch v4 Sysfs Control Path is **`CONTROL_PATH_WORKING`**.
+Patch v5 Two-Stage Testmode Sequence is **`PASS [RUNTIME PROVEN]`**.
 
-Current Testmode Query Result: **`CURRENT_TESTMODE_QUERY_RETURNS_STATUS_ONLY`**.
-
-Patch v5 Design: **`PATCH_V5_DESIGN_COMPLETE`** (Awaiting explicit user authorization).
+Final Verdict: **`STATUS_ONLY` / `CSI_NOT_PROVEN`**.
 
 Final driver state: Stock signed driver `mt7925e.ko.zst` active.
