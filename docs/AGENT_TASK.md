@@ -48,7 +48,7 @@ Do **not** flash WDR3600 router without physical verification.
 - **Gate 2 Readiness Matrix:** Authored [`docs/GATE2_READINESS.md`](GATE2_READINESS.md).
 
 ### 2026-08-07: Electronic Discovery & Hardware Inventory Complete
-- **Main Commit SHA:** `PENDING_COMMIT`
+- **Main Commit SHA:** `28bb2fb`
 - **Electronic Discovery Summary:** Electronic discovery executed (`ip link`, `ip addr`, `ip neigh`, `curl` HTTP/HTTPS probes). Active host network routes over `eno1` (metric 100) to an upstream gateway (`Xfinity Broadband Router Server` on `192.168.1.1`). No standalone OpenWrt or TP-Link HTTP management interface is currently exposed on local subnets.
 - **WDR3600 Identity Status:** **`MODEL_CONFIRMED_REVISION_UNKNOWN`**
 - **MT7925 Status:** **`READY_FOR_GATE2`** (Preflight check verified `PASS`).
