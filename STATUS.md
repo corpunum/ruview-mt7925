@@ -4,11 +4,11 @@
 
 **PATCH V4 SYSFS CONTROL PATH IS RUNTIME PROVEN (`CONTROL_PATH_WORKING`) ON AUGUST 7, 2026 (`docs/MT7925_ICAP_LOCKDOWN_SOLUTION.md`).**
 
-**LOCKDOWN-COMPATIBLE CONTROL PATH COMPLETE (`docs/MT7925_ICAP_LOCKDOWN_SOLUTION.md`):** Designed and implemented Patch v4 sysfs device attribute (`/sys/devices/.../ieee80211/phy*/mt7925_icap_trigger`). Verified userspace write cleanly bypasses Secure Boot kernel lockdown DebugFS write restrictions without disabling Secure Boot or weakening system security.
+**PROTOCOL FORENSICS COMPLETE (`docs/MT7925_MCU_TESTMODE_FORENSICS.md`):** Deconstructed the 8-byte MCU response header (`46 00 00 00 00 00 00 00`). Confirmed opcode `0x46` returned `STATUS_SUCCESS` (`0x00`). Reclassified current result to **`CURRENT_TESTMODE_QUERY_RETURNS_STATUS_ONLY`**.
 
-**REPRODUCIBLE BUILD AUTOMATION COMPLETE (`tools/build-canonical-patch-v4.sh`):** Created and verified 100% reproducible build script `tools/build-canonical-patch-v4.sh` compiled directly against Launchpad Canonical source (`Ubuntu-hwe-7.0-7.0.0-28.28~24.04.1`).
+**CROSS-GENERATION CAPTURE ARCHITECTURE ANALYSIS COMPLETE (`docs/MT7925_CAPTURE_ARCHITECTURE.md`):** Mapped MediaTek MT7915, MT7996, MT7921, and MT7925 testmode capture paths. Proved that synchronous RPC query returns status headers while raw capture matrices require a multi-stage testmode sequence.
 
-**CONTROLLED RF EXPERIMENT COMPLETE (`docs/MT7925_ICAP_RUNTIME_TEST_V4.md`):** Executed controlled AR9271 -> MT7925 RF experiment. Dispatched testmode opcode `0x46` to MT7925 MCU under active AR9271 Channel 6 HT20 802.11n frame transmission. MT7925 MCU returned an 8-byte status response header (`len=8`). Stock WM firmware (`Build Time: 20251210093025`) does not allocate/stream raw I/Q subcarrier CSI matrices over PCIe DMA rings without MTK proprietary QA-Tool calibration sequences (**`FIRMWARE_CAPABILITY_NOT_EXPOSED`**).
+**PATCH V5 TWO-STAGE TESTMODE DESIGN COMPLETE (`docs/PATCH_V5_DESIGN.md`):** Authored proposed Patch v5 two-stage testmode state machine design (`MT76_TM_STATE_ON` -> `SWITCH_MODE_RF_TEST` -> `SWITCH_MODE_ICAP` -> `MCU_UNI_QUERY(TESTMODE_RX_STAT)`). Awaiting explicit user authorization before execution.
 
 ---
 
@@ -22,7 +22,7 @@
 - Reproducible Build Automation: `tools/build-canonical-patch-v4.sh` verified functional and clean. `[RUNTIME PROVEN]`
 - Symbol CRC Alignment: 100% match on all exported symbols (`mt792x_get_txpower` CRC `0x310f36d2`). `[RUNTIME PROVEN]`
 - Sysfs Control Path Verification: `mt7925_icap_trigger` sysfs node registered & verified at `/sys/devices/.../ieee80211/phy*/mt7925_icap_trigger` (`--w-------`). Bypasses DebugFS lockdown (`CONTROL_PATH_WORKING`). `[RUNTIME PROVEN]`
-- MCU Response Capture: MCU returned 8-byte status response header (`len=8`) upon testmode trigger. `[RUNTIME PROVEN]`
+- MCU Response Capture: MCU returned 8-byte status response header (`len=8`, `STATUS_SUCCESS`). Result classified: `CURRENT_TESTMODE_QUERY_RETURNS_STATUS_ONLY`. `[RUNTIME PROVEN]`
 - Signed out-of-tree modules (`mt7925-common.ko`, `mt7925e.ko`) loaded and accepted under Secure Boot with ZERO symbol errors. `[RUNTIME PROVEN]`
 - MT7925 PCI adapter bound cleanly (`ASIC revision: 79250000`, `HW/SW Version: 0x8a108a10`). `[RUNTIME PROVEN]`
 - Target secondary USB adapter: TP-Link TL-WN722N v1.0, USB VID:PID `0cf3:9271` (Qualcomm Atheros AR9271). Bound to `ath9k_htc`. `[RUNTIME PROVEN]`
@@ -45,6 +45,8 @@
 
 Patch v4 Sysfs Control Path is **`CONTROL_PATH_WORKING`**.
 
-RF Experiment Result: **`FIRMWARE_CAPABILITY_NOT_EXPOSED`**.
+Current Testmode Query Result: **`CURRENT_TESTMODE_QUERY_RETURNS_STATUS_ONLY`**.
+
+Patch v5 Design: **`PATCH_V5_DESIGN_COMPLETE`** (Awaiting explicit user authorization).
 
 Final driver state: Stock signed driver `mt7925e.ko.zst` active.

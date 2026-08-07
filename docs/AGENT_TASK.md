@@ -18,7 +18,7 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 
 1. **MediaTek MT7925 (Primary / Onboard)**
    - **Type:** Onboard Wi-Fi 7 PCI Express adapter (`14c3:0717`).
-   - **Status:** Active Primary Target. Gate 1 & Gate 2 Driver Replacement `PASS [RUNTIME PROVEN]`. Canonical Patch v3 `icap_trigger` DebugFS node `PASS [RUNTIME PROVEN]` (`docs/MT7925_CANONICAL_ABI_PROOF.md`). Patch v4 Sysfs Control Path `CONTROL_PATH_WORKING` (`docs/MT7925_ICAP_LOCKDOWN_SOLUTION.md`). Controlled RF Experiment Result: `FIRMWARE_CAPABILITY_NOT_EXPOSED` (`docs/MT7925_ICAP_RUNTIME_TEST_V4.md`). Reproducible build script `tools/build-canonical-patch-v4.sh` `PASS [RUNTIME PROVEN]`.
+   - **Status:** Active Primary Target. Gate 1 & Gate 2 Driver Replacement `PASS [RUNTIME PROVEN]`. Canonical Patch v3 `icap_trigger` DebugFS node `PASS [RUNTIME PROVEN]` (`docs/MT7925_CANONICAL_ABI_PROOF.md`). Patch v4 Sysfs Control Path `CONTROL_PATH_WORKING` (`docs/MT7925_ICAP_LOCKDOWN_SOLUTION.md`). Protocol Forensics Complete: 8-byte response decoded as `STATUS_SUCCESS` (`docs/MT7925_MCU_TESTMODE_FORENSICS.md`). Result classified: `CURRENT_TESTMODE_QUERY_RETURNS_STATUS_ONLY`. Patch v5 Two-Stage Testmode Sequence designed (`docs/PATCH_V5_DESIGN.md`).
    - **Documentation:** [`hardware/mt7925/README.md`](../hardware/mt7925/README.md)
 
 2. **TP-Link TL-WN722N v1.0 (Secondary / USB Injector)**
@@ -67,11 +67,13 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 - **DebugFS Proof:** **`icap_trigger` DebugFS node RUNTIME PROVEN** at `/sys/kernel/debug/ieee80211/phy9/mt76/icap_trigger` (`--w-------`).
 - **Controlled Rollback:** Controlled rollback restored stock in-tree signed driver `/lib/modules/.../mt7925e.ko.zst` in <1 second (`PASS`). Authored [`docs/MT7925_CANONICAL_ABI_PROOF.md`](MT7925_CANONICAL_ABI_PROOF.md).
 
-### 2026-08-07: Patch v4 Sysfs Control Path & Controlled RF Experiment Complete
+### 2026-08-07: Patch v4 Sysfs Control Path & Protocol Forensics Complete
 - **Main Commit SHA:** `f40cf0e`
 - **Reproducible Build Script:** Authored [`tools/build-canonical-patch-v4.sh`](../tools/build-canonical-patch-v4.sh).
 - **Patch v4 Implementation:** Added `mt7925_icap_trigger` sysfs device attribute (`--w-------`) under `wiphy->dev.kobj` in `mt7925/init.c`.
 - **Sysfs Control Path Status:** **`CONTROL_PATH_WORKING`**. Bypassed Secure Boot kernel lockdown DebugFS write restrictions cleanly without disabling Secure Boot (`docs/MT7925_ICAP_LOCKDOWN_SOLUTION.md`).
-- **Controlled RF Experiment Result:** **`FIRMWARE_CAPABILITY_NOT_EXPOSED`**. Dispatched testmode opcode `0x46` to MT7925 MCU under active AR9271 Channel 6 HT20 802.11n frame transmission. MT7925 MCU returned an 8-byte status response header (`len=8`). Stock WM firmware (`Build Time: 20251210093025`) does not allocate/stream raw I/Q subcarrier CSI matrices over PCIe DMA rings without MTK proprietary QA-Tool calibration sequences (`docs/MT7925_ICAP_RUNTIME_TEST_V4.md`).
-- **Controlled Rollback:** Controlled rollback restored stock in-tree signed driver `/lib/modules/.../mt7925e.ko.zst` in <1 second (`PASS`).
+- **8-Byte Response Deconstruction:** Decoded `46 00 00 00 00 00 00 00` as `struct mt7925_mcu_uni_event` (`cid=0x46`, `status=0x00` [`STATUS_SUCCESS`]). Authored [`docs/MT7925_MCU_TESTMODE_FORENSICS.md`](MT7925_MCU_TESTMODE_FORENSICS.md).
+- **Result Classification:** **`CURRENT_TESTMODE_QUERY_RETURNS_STATUS_ONLY`**.
+- **MediaTek Capture Comparison:** Mapped MT7915, MT7996, MT7921, and MT7925 testmode capture paths. Authored [`docs/MT7925_CAPTURE_ARCHITECTURE.md`](MT7925_CAPTURE_ARCHITECTURE.md).
+- **Patch v5 Proposal:** Designed Patch v5 Two-Stage Testmode Sequence (`MT76_TM_STATE_ON` -> `SWITCH_MODE_RF_TEST` -> `SWITCH_MODE_ICAP` -> `MCU_UNI_QUERY(TESTMODE_RX_STAT)`). Authored [`docs/PATCH_V5_DESIGN.md`](PATCH_V5_DESIGN.md). Awaiting authorization.
 - **Final Driver State:** Stock signed driver active (`PASS`).

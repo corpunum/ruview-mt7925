@@ -8,7 +8,7 @@ RuView formally tracks two complementary hardware sensing backends:
 
 1. **MediaTek MT7925 (Primary / Onboard)**
    - **Type:** Onboard Wi-Fi 7 PCI Express adapter (`14c3:0717`).
-   - **Status:** Active Primary Target. Gate 1 & Gate 2 Driver Replacement `PASS [RUNTIME PROVEN]`. Canonical Patch v3 `icap_trigger` DebugFS node `PASS [RUNTIME PROVEN]`. Reproducible build script `tools/build-canonical-patch-v4.sh` `PASS [RUNTIME PROVEN]`. Sysfs Lockdown-Compatible Control Path `PASS [RUNTIME PROVEN]` (`CONTROL_PATH_WORKING`). MCU ICAP response header captured (`len=8`).
+   - **Status:** Active Primary Target. Gate 1 & Gate 2 Driver Replacement `PASS [RUNTIME PROVEN]`. Canonical Patch v3 `icap_trigger` DebugFS node `PASS [RUNTIME PROVEN]`. Reproducible build script `tools/build-canonical-patch-v4.sh` `PASS [RUNTIME PROVEN]`. Sysfs Lockdown-Compatible Control Path `PASS [RUNTIME PROVEN]` (`CONTROL_PATH_WORKING`). MCU testmode status header captured (`CURRENT_TESTMODE_QUERY_RETURNS_STATUS_ONLY`). Protocol forensics & Patch v5 design complete (`docs/PATCH_V5_DESIGN.md`).
    - **Documentation:** [`hardware/mt7925/README.md`](hardware/mt7925/README.md)
 
 2. **TP-Link TL-WN722N v1.0 (Secondary / USB Reference & Packet Injector)**
@@ -47,8 +47,9 @@ RuView formally tracks two complementary hardware sensing backends:
 > [!WARNING]
 > **PROMINENT CURRENT-STATUS WARNING**
 > - **Patch v4 Sysfs Control Path is `CONTROL_PATH_WORKING`.**
-> - **MT7925 MCU testmode command `MCU_UNI_QUERY(TESTMODE_CTRL)` returned an 8-byte status response header (`len=8`).**
-> - **In stock WM firmware (`Build Time: 20251210093025`), no raw I/Q subcarrier CSI matrix payload is streamed over DMA without proprietary MTK QA-Tool / MATE firmware calibration routines (`FIRMWARE_CAPABILITY_NOT_EXPOSED`).**
+> - **MT7925 MCU testmode command `MCU_UNI_QUERY(TESTMODE_CTRL)` returned an 8-byte status response header (`CURRENT_TESTMODE_QUERY_RETURNS_STATUS_ONLY`).**
+> - **Protocol Forensics & MCU Call Chain Analysis complete (`docs/MT7925_MCU_TESTMODE_FORENSICS.md`).**
+> - **Patch v5 Two-Stage Testmode Sequence designed (`docs/PATCH_V5_DESIGN.md`). Awaiting authorization.**
 > - TL-WN722N v1.0 USB hardware serves as a controlled 802.11n packet injector.
 > - **OpenUnum is completely out of scope.**
 
@@ -58,8 +59,10 @@ RuView formally tracks two complementary hardware sensing backends:
 
 - [Project Status](STATUS.md)
 - [Agent Task & Execution Log](docs/AGENT_TASK.md)
+- [MCU Testmode Forensics](docs/MT7925_MCU_TESTMODE_FORENSICS.md)
+- [MediaTek Capture Architecture](docs/MT7925_CAPTURE_ARCHITECTURE.md)
+- [Patch v5 Design Proposal](docs/PATCH_V5_DESIGN.md)
 - [Patch v4 Sysfs Solution](docs/MT7925_ICAP_LOCKDOWN_SOLUTION.md)
-- [Patch v4 Runtime Test Results](docs/MT7925_ICAP_RUNTIME_TEST_V4.md)
 - [Canonical ABI Proof](docs/MT7925_CANONICAL_ABI_PROOF.md)
 - [CSI Path Comparison](docs/CSI_PATH_COMPARISON.md)
 - [Hardware Inventory](docs/HARDWARE_INVENTORY.md)
