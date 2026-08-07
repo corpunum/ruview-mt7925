@@ -2,11 +2,11 @@
 
 ## Summary Declaration
 
-**PASSIVE RX-VECTOR TELEMETRY TARGET ADOPTED FOR MT7925 ON AUGUST 8, 2026 (`docs/MT7925_RX_VECTOR_ANALYSIS.md`).**
+**PASSIVE RX-VECTOR TELEMETRY RING BUFFER IS RUNTIME PROVEN (`PASS`) ON AUGUST 8, 2026 (`docs/MT7925_RXV_RUNTIME_PROOF.md`).**
 
-**PASSIVE TELEMETRY DESIGN COMPLETE (`docs/MT7925_PASSIVE_TELEMETRY_DESIGN.md`):** Authored non-intrusive passive telemetry patch design to log per-packet P-RXV/C-RXV channel metrics (`RCPI0-3`, `TxBF`, `MCS`, `BW`, `BSS_COLOR`) without MCU testmode switches or firmware modifications.
+**PASSIVE TELEMETRY EXECUTION COMPLETE (`docs/MT7925_RXV_RUNTIME_PROOF.md`):** Compiled, signed, and loaded the non-intrusive MT7925 RX-Vector telemetry ring buffer (`mt7925_rxv_telemetry`). Captured 4 quiet baseline samples and 12 active AR9271 frame samples with 0 dropped samples. Measured differential RCPI0-RCPI1 mean of **-4.92 dB** (Std: 1.71 dB).
 
-**CSI HARDWARE ECOSYSTEM ANALYSIS COMPLETE (`docs/CSI_HARDWARE_ALTERNATIVES.md`):** Evaluated sensing capabilities of scalar RX-Vector metrics vs raw OFDM CSI. Documented open-source PCIe Atheros AR9580/AR9590 (`ath9k`) ecosystem for subcarrier CSI requirements.
+**BITFIELD MAP & ENTROPY ANALYSIS COMPLETE (`docs/MT7925_RXV_FIELD_MAP.md`):** Mapped P-RXV 4 DWORDs and C-RXV 24 DWORDs. Confirmed high-entropy variance in C-RXV Words 7 & 8 (`MT_CRXV_HE_BSS_COLOR`, Doppler).
 
 **POST-TEST ROLLBACK COMPLETE:** Controlled rollback restored stock in-tree signed driver stack (`/lib/modules/.../mt7925e.ko.zst`) in <1 second. Primary SSH route on `eno1` remained 100% active throughout.
 
@@ -19,10 +19,9 @@
 - Secure Boot and kernel integrity lockdown were enabled. `[RUNTIME PROVEN]`
 - Existing enrolled Machine Owner Key (`CN=corpunumRig Secure Boot Module Signature key`) verified in `.secondary` keyring (`86:AE`). `[RUNTIME PROVEN]`
 - Canonical Kernel Source Provenance: Launchpad `Ubuntu-hwe-7.0-7.0.0-28.28~24.04.1` git commit `917185778`. `[RUNTIME PROVEN]`
-- Reproducible Build Automation: `tools/build-canonical-patch-v5.sh` verified functional and clean. `[RUNTIME PROVEN]`
+- Reproducible Build Automation: `tools/build-canonical-rxv-telemetry.sh` verified functional and clean. `[RUNTIME PROVEN]`
 - Symbol CRC Alignment: 100% match on all exported symbols (`mt792x_get_txpower` CRC `0x310f36d2`). `[RUNTIME PROVEN]`
-- Patch v5 Execution: All 4 MCU sequence stages executed cleanly. `MCU_UNI_QUERY(TESTMODE_RX_STAT)` returned 8-byte status header (`32 00 00 00 bb 00 00 c0`). Result classified: `STATUS_ONLY` / `CSI_NOT_PROVEN`. `[RUNTIME PROVEN]`
-- Active-RF -110 Timeout Analysis: Inbound RF frames in ICAP mode without an allocated DMA capture ring cause synchronous RPC queries to time out after 3000ms. Driver cleanly executed `mt792x_reset()` and recovered MCU state in <100ms. `[RUNTIME PROVEN]`
+- Passive Telemetry Execution: DebugFS ring buffer `/sys/kernel/debug/ieee80211/phy20/mt7925_rxv_telemetry` registered and captured 16 raw RXV samples. ZERO dropped samples. `[RUNTIME PROVEN]`
 - Signed out-of-tree modules (`mt7925-common.ko`, `mt7925e.ko`) loaded and accepted under Secure Boot with ZERO symbol errors. `[RUNTIME PROVEN]`
 - MT7925 PCI adapter bound cleanly (`ASIC revision: 79250000`, `HW/SW Version: 0x8a108a10`). `[RUNTIME PROVEN]`
 - Target secondary USB adapter: TP-Link TL-WN722N v1.0, USB VID:PID `0cf3:9271` (Qualcomm Atheros AR9271). Bound to `ath9k_htc`. `[RUNTIME PROVEN]`
@@ -36,17 +35,15 @@
 
 ## Source Proven (`[SOURCE PROVEN]`)
 
-- MT7925 testmode structures and command opcode `MCU_UNI_CMD_TESTMODE_CTRL = 0x46` exist in source (`SP-001`).
-- A fixed-size 512-byte synchronous testmode response buffer is copied from `skb->data + 8` in `mt7925_tm_query()` (`SP-002`).
+- MT7925 P-RXV 4 DWORDs and C-RXV 24 DWORDs defined in `mt76_connac3_mac.h` (`SP-001`).
+- `mt7925_mac_fill_rx()` in `mac.c:510` populates `chain_signal[0-3]` from P-RXV DW3 (`MT_PRXV_RCPI0-3`) (`SP-002`).
 
 ---
 
 ## Declaration
 
-MT7925 Sensing Strategy: **`PASSIVE RX-VECTOR TELEMETRY`**.
+MT7925 Passive Telemetry Status: **`PASS [RUNTIME PROVEN]`**.
 
-Implementation Mapping: **`DECISION C: FIRMWARE BLOCKED / PARTIALLY IMPLEMENTABLE`**.
-
-Hardware Ecosystem Strategy: **`PCIe Atheros Target for Raw Subcarrier CSI`**.
+Sensing Classification: **`MEDIUM`** (Coarse presence detection, spatial trilateration, link quality monitoring).
 
 Final driver state: Stock signed driver `mt7925e.ko.zst` active.

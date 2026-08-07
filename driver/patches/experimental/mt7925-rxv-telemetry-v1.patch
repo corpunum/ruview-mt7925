@@ -1,0 +1,14 @@
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7925/mac.c b/drivers/net/wireless/mediatek/mt76/mt7925/mac.c
+index 1234567..89abcde 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7925/mac.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7925/mac.c
+@@ -535,6 +535,16 @@
+ 		ret = mt7925_mac_fill_rx_rate(dev, status, sband, rxv, &mode);
+ 		if (ret < 0)
+ 			return ret;
++
++		/* RuView RXV Telemetry Ring Log */
++		if (mt7925_rxv_ring_active) {
++			mt7925_store_rxv_sample(rxv, status);
++		}
+

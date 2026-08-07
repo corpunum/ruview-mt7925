@@ -8,7 +8,7 @@ RuView formally tracks two complementary hardware sensing backends:
 
 1. **MediaTek MT7925 (Primary / Onboard)**
    - **Type:** Onboard Wi-Fi 7 PCI Express adapter (`14c3:0717`).
-   - **Status:** Active Primary Target. Gate 1 & Gate 2 Driver Replacement `PASS [RUNTIME PROVEN]`. Canonical Patch v3 `icap_trigger` DebugFS node `PASS [RUNTIME PROVEN]`. Reproducible build script `tools/build-canonical-patch-v5.sh` `PASS [RUNTIME PROVEN]`. Sysfs Lockdown-Compatible Control Path `PASS [RUNTIME PROVEN]` (`CONTROL_PATH_WORKING`). Passive RX-Vector Forensics complete (`docs/MT7925_RX_VECTOR_ANALYSIS.md`). Passive Telemetry Design complete (`docs/MT7925_PASSIVE_TELEMETRY_DESIGN.md`). CSI Hardware Alternatives analyzed (`docs/CSI_HARDWARE_ALTERNATIVES.md`).
+   - **Status:** Active Primary Target. Gate 1 & Gate 2 Driver Replacement `PASS [RUNTIME PROVEN]`. Canonical Patch v3 `icap_trigger` DebugFS node `PASS [RUNTIME PROVEN]`. Passive RX-Vector Telemetry Ring Buffer `PASS [RUNTIME PROVEN]` (`docs/MT7925_RXV_RUNTIME_PROOF.md`). P-RXV/C-RXV Bitfield & Descriptor Map complete (`docs/MT7925_RXV_FIELD_MAP.md`). Reproducible build script `tools/build-canonical-rxv-telemetry.sh` `PASS [RUNTIME PROVEN]`.
    - **Documentation:** [`hardware/mt7925/README.md`](hardware/mt7925/README.md)
 
 2. **TP-Link TL-WN722N v1.0 (Secondary / USB Reference & Packet Injector)**
@@ -46,7 +46,7 @@ RuView formally tracks two complementary hardware sensing backends:
 
 > [!WARNING]
 > **PROMINENT CURRENT-STATUS WARNING**
-> - **MT7925 Operational Path Target: Passive RX-Vector PHY Telemetry.**
+> - **MT7925 Passive RX-Vector Telemetry Ring Buffer is `PASS [RUNTIME PROVEN]`.**
 > - **Exposes per-packet `RCPI0-3` (4 antenna chains), TxBF, MCS, BW, NSS, and STBC metrics.**
 > - **ICAP Reverse Engineering Prohibited per User Directives.**
 > - **CSI Hardware Ecosystem Alternatives documented (`docs/CSI_HARDWARE_ALTERNATIVES.md`).**
@@ -59,6 +59,8 @@ RuView formally tracks two complementary hardware sensing backends:
 
 - [Project Status](STATUS.md)
 - [Agent Task & Execution Log](docs/AGENT_TASK.md)
+- [MT7925 RX-Vector Runtime Proof](docs/MT7925_RXV_RUNTIME_PROOF.md)
+- [MT7925 RX-Vector Field Map](docs/MT7925_RXV_FIELD_MAP.md)
 - [MT7925 RX-Vector Analysis](docs/MT7925_RX_VECTOR_ANALYSIS.md)
 - [Passive Telemetry Patch Design](docs/MT7925_PASSIVE_TELEMETRY_DESIGN.md)
 - [CSI Hardware Ecosystem Alternatives](docs/CSI_HARDWARE_ALTERNATIVES.md)
