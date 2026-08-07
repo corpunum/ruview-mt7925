@@ -8,12 +8,12 @@ RuView formally tracks two complementary hardware sensing backends:
 
 1. **MediaTek MT7925 (Primary / Onboard)**
    - **Type:** Onboard Wi-Fi 7 PCI Express adapter (`14c3:0717`).
-   - **Status:** Active Primary Target. Gate 1 Driver Replacement `PASS [RUNTIME PROVEN]`. Gate 2 Ready (`READY_FOR_GATE2`).
+   - **Status:** Active Primary Target. Gate 1 & Gate 2 Driver Replacement `PASS [RUNTIME PROVEN]`. Canonical Patch v3 `icap_trigger` DebugFS node `PASS [RUNTIME PROVEN]`. Reproducible build script `tools/build-canonical-patch-v4.sh` `PASS [RUNTIME PROVEN]`. Sysfs Lockdown-Compatible Control Path `PASS [RUNTIME PROVEN]` (`CONTROL_PATH_WORKING`). MCU ICAP response header captured (`len=8`).
    - **Documentation:** [`hardware/mt7925/README.md`](hardware/mt7925/README.md)
 
-2. **TP-Link TL-WN722N v1.0 (Secondary / USB Reference)**
+2. **TP-Link TL-WN722N v1.0 (Secondary / USB Reference & Packet Injector)**
    - **Type:** USB 2.0 Atheros AR9271 High Gain Adapter (`0cf3:9271`).
-   - **Status:** Secondary Reference Target. Hardware identified & bound to `ath9k_htc` `[RUNTIME PROVEN]`. USB sysfs unbind isolation verified.
+   - **Status:** Active Secondary Target / Controlled Packet Injector. Hardware identified & bound to `ath9k_htc` `[RUNTIME PROVEN]`. Set to Channel 6 HT20 monitor mode (`wlxf4ec3897c206`). Raw CSI extraction status: `CSI_RUNTIME_FAILED` (AR9271 USB HTC firmware architecture does not expose raw OFDM subcarrier CSI matrices). Serves as controlled packet injector.
    - **Documentation:** [`hardware/tl-wn722n/README.md`](hardware/tl-wn722n/README.md)
 
 *(Note: TP-Link TL-WDR3600 router investigation is DEFERRED / OUT OF CURRENT SCOPE).*
@@ -23,34 +23,33 @@ RuView formally tracks two complementary hardware sensing backends:
 ## Unified Sensing Pipeline Architecture
 
 ```text
-                               ┌──────────────────────────┐
-                               │   RuView Core Platform   │
-                               └────────────┬─────────────┘
-                                            │
-                               ┌────────────┴─────────────┐
-                               │  Hardware Abstraction    │
-                               │   CSI Normalization API  │
-                               └──────┬─────────────┬─────┘
-                                      │             │
-                ┌─────────────────────┴──┐       ┌──┴──────────────────────┐
-                │ Primary / Onboard      │       │ Secondary / USB Reference│
-                │ MediaTek MT7925        │       │ TP-Link TL-WN722N v1.0  │
-                │ (Wi-Fi 7 PCIe)         │       │ (Atheros AR9271 USB)    │
-                └───────────┬────────────┘       └──────────┬──────────────┘
-                            │                               │
-                ┌───────────┴────────────┐       ┌──────────┴──────────────┐
-                │ Linux mt76 / mt7925    │       │ Linux ath9k_htc         │
-                │ MCU TESTMODE / DebugFS │       │ open-ath9k-htc-firmware │
-                └────────────────────────┘       └─────────────────────────┘
+                                ┌──────────────────────────┐
+                                │   RuView Core Platform   │
+                                └────────────┬─────────────┘
+                                             │
+                                ┌────────────┴─────────────┐
+                                │  Hardware Abstraction    │
+                                │   CSI Normalization API  │
+                                └──────┬─────────────┬─────┘
+                                       │             │
+                 ┌─────────────────────┴──┐       ┌──┴──────────────────────┐
+                 │ Primary / Onboard      │       │ Secondary / USB Reference│
+                 │ MediaTek MT7925        │       │ TP-Link TL-WN722N v1.0  │
+                 │ (Wi-Fi 7 PCIe)         │       │ (Atheros AR9271 USB)    │
+                 └───────────┬────────────┘       └──────────┬──────────────┘
+                             │                               │
+                 ┌───────────┴────────────┐       ┌──────────┴──────────────┐
+                 │ Linux mt76 / mt7925    │       │ Linux ath9k_htc         │
+                 │ MCU TESTMODE / Sysfs   │       │ open-ath9k-htc-firmware │
+                 └────────────────────────┘       └─────────────────────────┘
 ```
 
 > [!WARNING]
 > **PROMINENT CURRENT-STATUS WARNING**
-> - **No genuine MT7925 ICAP/CSI payload has yet been captured.**
-> - **No claim of working MT7925 CSI extraction is currently made.**
-> - TL-WN722N v1.0 USB hardware is verified and bound to `ath9k_htc`, but CSI firmware extraction remains to be executed.
-> - Managed and monitor interfaces were proven to coexist on MT7925 (`mon0` + `wlp195s0` UP simultaneously).
-> - eBPF (`bpftrace`) was proven to observe ordinary `mt76` MCU events.
+> - **Patch v4 Sysfs Control Path is `CONTROL_PATH_WORKING`.**
+> - **MT7925 MCU testmode command `MCU_UNI_QUERY(TESTMODE_CTRL)` returned an 8-byte status response header (`len=8`).**
+> - **In stock WM firmware (`Build Time: 20251210093025`), no raw I/Q subcarrier CSI matrix payload is streamed over DMA without proprietary MTK QA-Tool / MATE firmware calibration routines (`FIRMWARE_CAPABILITY_NOT_EXPOSED`).**
+> - TL-WN722N v1.0 USB hardware serves as a controlled 802.11n packet injector.
 > - **OpenUnum is completely out of scope.**
 
 ---
@@ -59,6 +58,9 @@ RuView formally tracks two complementary hardware sensing backends:
 
 - [Project Status](STATUS.md)
 - [Agent Task & Execution Log](docs/AGENT_TASK.md)
+- [Patch v4 Sysfs Solution](docs/MT7925_ICAP_LOCKDOWN_SOLUTION.md)
+- [Patch v4 Runtime Test Results](docs/MT7925_ICAP_RUNTIME_TEST_V4.md)
+- [Canonical ABI Proof](docs/MT7925_CANONICAL_ABI_PROOF.md)
 - [CSI Path Comparison](docs/CSI_PATH_COMPARISON.md)
 - [Hardware Inventory](docs/HARDWARE_INVENTORY.md)
 - [MediaTek MT7925 Details](hardware/mt7925/README.md)

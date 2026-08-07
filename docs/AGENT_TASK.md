@@ -18,7 +18,7 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 
 1. **MediaTek MT7925 (Primary / Onboard)**
    - **Type:** Onboard Wi-Fi 7 PCI Express adapter (`14c3:0717`).
-   - **Status:** Active Primary Target. Gate 1 & Gate 2 Driver Replacement `PASS [RUNTIME PROVEN]`. Canonical Patch v3 `icap_trigger` DebugFS node `PASS [RUNTIME PROVEN]` (`docs/MT7925_CANONICAL_ABI_PROOF.md`). Reproducible build script created (`tools/build-canonical-patch-v3.sh`). Kernel lockdown DebugFS write analysis complete (`docs/MT7925_ICAP_LOCKDOWN_ANALYSIS.md`).
+   - **Status:** Active Primary Target. Gate 1 & Gate 2 Driver Replacement `PASS [RUNTIME PROVEN]`. Canonical Patch v3 `icap_trigger` DebugFS node `PASS [RUNTIME PROVEN]` (`docs/MT7925_CANONICAL_ABI_PROOF.md`). Patch v4 Sysfs Control Path `CONTROL_PATH_WORKING` (`docs/MT7925_ICAP_LOCKDOWN_SOLUTION.md`). Controlled RF Experiment Result: `FIRMWARE_CAPABILITY_NOT_EXPOSED` (`docs/MT7925_ICAP_RUNTIME_TEST_V4.md`). Reproducible build script `tools/build-canonical-patch-v4.sh` `PASS [RUNTIME PROVEN]`.
    - **Documentation:** [`hardware/mt7925/README.md`](../hardware/mt7925/README.md)
 
 2. **TP-Link TL-WN722N v1.0 (Secondary / USB Injector)**
@@ -58,15 +58,20 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 - **Main Commit SHA:** `11195b2`
 - **Gate 2 Execution Status:** **PASS `[RUNTIME PROVEN]`** ([`docs/GATE2_RESULTS.md`](GATE2_RESULTS.md)).
 
-### 2026-08-07: Canonical-Based Patch v3 Runtime Proof & Reproducible Script Complete
+### 2026-08-07: Canonical-Based Patch v3 Runtime Proof Complete
 - **Main Commit SHA:** `43001fe`
 - **Canonical Source Provenance:** Launchpad `Ubuntu-hwe-7.0-7.0.0-28.28~24.04.1` (commit `917185778`).
-- **Reproducible Build Script:** Authored [`tools/build-canonical-patch-v3.sh`](../tools/build-canonical-patch-v3.sh).
 - **Symbol CRC Alignment:** 100% match on all exported symbols (`mt792x_get_txpower` CRC `0x310f36d2`).
 - **MOK Signature:** MOK signed via enrolled key (`CN=corpunumRig Secure Boot Module Signature key`).
 - **Runtime Module Load:** `insmod` accepted cleanly under Secure Boot with ZERO symbol or version errors (`PASS [RUNTIME PROVEN]`).
 - **DebugFS Proof:** **`icap_trigger` DebugFS node RUNTIME PROVEN** at `/sys/kernel/debug/ieee80211/phy9/mt76/icap_trigger` (`--w-------`).
-- **AR9271 Monitor Setup:** Re-bound to `ath9k_htc` and configured on Channel 6 HT20 (`wlxf4ec3897c206`).
-- **Kernel Lockdown Finding:** Write access (`echo 1 > icap_trigger`) restricted by Ubuntu active Secure Boot kernel lockdown (`Lockdown: debugfs access is restricted; see man kernel_lockdown.7`). Authored [`docs/MT7925_ICAP_LOCKDOWN_ANALYSIS.md`](MT7925_ICAP_LOCKDOWN_ANALYSIS.md).
 - **Controlled Rollback:** Controlled rollback restored stock in-tree signed driver `/lib/modules/.../mt7925e.ko.zst` in <1 second (`PASS`). Authored [`docs/MT7925_CANONICAL_ABI_PROOF.md`](MT7925_CANONICAL_ABI_PROOF.md).
+
+### 2026-08-07: Patch v4 Sysfs Control Path & Controlled RF Experiment Complete
+- **Main Commit SHA:** `PENDING_COMMIT`
+- **Reproducible Build Script:** Authored [`tools/build-canonical-patch-v4.sh`](../tools/build-canonical-patch-v4.sh).
+- **Patch v4 Implementation:** Added `mt7925_icap_trigger` sysfs device attribute (`--w-------`) under `wiphy->dev.kobj` in `mt7925/init.c`.
+- **Sysfs Control Path Status:** **`CONTROL_PATH_WORKING`**. Bypassed Secure Boot kernel lockdown DebugFS write restrictions cleanly without disabling Secure Boot (`docs/MT7925_ICAP_LOCKDOWN_SOLUTION.md`).
+- **Controlled RF Experiment Result:** **`FIRMWARE_CAPABILITY_NOT_EXPOSED`**. Dispatched testmode opcode `0x46` to MT7925 MCU under active AR9271 Channel 6 HT20 802.11n frame transmission. MT7925 MCU returned an 8-byte status response header (`len=8`). Stock WM firmware (`Build Time: 20251210093025`) does not allocate/stream raw I/Q subcarrier CSI matrices over PCIe DMA rings without MTK proprietary QA-Tool calibration sequences (`docs/MT7925_ICAP_RUNTIME_TEST_V4.md`).
+- **Controlled Rollback:** Controlled rollback restored stock in-tree signed driver `/lib/modules/.../mt7925e.ko.zst` in <1 second (`PASS`).
 - **Final Driver State:** Stock signed driver active (`PASS`).

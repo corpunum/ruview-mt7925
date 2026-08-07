@@ -1,0 +1,52 @@
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7925/main.c b/drivers/net/wireless/mediatek/mt76/mt7925/main.c
+index 1234567..89abcde 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7925/main.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7925/main.c
+@@ -200,6 +200,52 @@
+ 
+ #define MT7925_EVT_RSP_LEN 512
+ 
++static ssize_t
++mt7925_sysfs_icap_trigger_store(struct device *dev,
++				 struct device_attribute *attr,
++				 const char *buf, size_t count)
++{
++	struct mt792x_dev *mdev = dev_get_drvdata(dev);
++	struct mt7925_rftest_cmd cmd;
++	struct sk_buff *skb = NULL;
++	unsigned long val;
++	int ret;
++
++	if (kstrtoul(buf, 10, &val) || val != 1)
++		return -EINVAL;
+
++	memset(&cmd, 0, sizeof(cmd));
++	cmd.ctrl.action = CMD_TEST_CTRL_ACT_SWITCH_MODE;
++	cmd.ctrl.data.op_mode = cpu_to_le32(CMD_TEST_CTRL_ACT_SWITCH_MODE_ICAP);
+
++	mutex_lock(&mdev->mt76.mutex);
++	mdev->pm.enable = false;
++	ret = mt76_mcu_send_and_get_msg(&mdev->mt76, MCU_UNI_QUERY(TESTMODE_CTRL),
++					&cmd, sizeof(cmd), true, &skb);
++	if (ret) {
++		mdev->pm.enable = true;
++		mutex_unlock(&mdev->mt76.mutex);
++		dev_err(dev, "[RuView] ICAP trigger MCU send failed: %d\n", ret);
++		return ret;
++	}
+
++	if (skb && skb->len >= MT7925_EVT_RSP_LEN + 8) {
++		dev_info(dev, "[RuView] ICAP trigger MCU SUCCESS! Response len=%d\n", skb->len);
++		dev_kfree_skb(skb);
++	} else if (skb) {
++		dev_warn(dev, "[RuView] ICAP trigger MCU short response len=%d\n", skb->len);
++		dev_kfree_skb(skb);
++		ret = -EINVAL;
++	}
+
++	mdev->pm.enable = true;
++	mutex_unlock(&mdev->mt76.mutex);
++	return ret ? ret : count;
++}
++
++static DEVICE_ATTR(icap_trigger, 0200, NULL, mt7925_sysfs_icap_trigger_store);
