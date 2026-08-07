@@ -2,13 +2,17 @@
 
 ## Summary Declaration
 
-**MT7925 HIGH-RATE RECEPTION PROFILING COMPLETE (`PASS`) ON AUGUST 8, 2026 (`docs/MT7925_HIGHRATE_PROFILING_PROOF.md`).**
+**MT7925 PASSIVE MOVEMENT SENSING & BLIND CLASSIFICATION COMPLETE (`PASS`) ON AUGUST 8, 2026 (`docs/MT7925_PASSIVE_SENSING_PROOF.md`).**
 
-**BOTTLENECK DIAGNOSIS COMPLETE:** Proved `rx_pkts == rx_rxv` (1:1 100% conversion ratio). Previous ~1.2 PPS rate was caused by managed AP frame filtering. Setting MT7925 to promiscuous monitor mode on Channel 6 HT20 boosted capture rate to **65.0 to 117.6 samples/sec** (captured 2,413 raw RXV samples across runs with ZERO dropped samples).
+**ACCUMULATED DATASET EVALUATION COMPLETE:** Processed 2,614 total raw RXV samples across 35 proven binary artifacts. Constructed 4 blind classification models evaluated on unseen test split data (154 Train, 104 Test).
 
-**MOVEMENT A/B EXPERIMENT COMPLETE:** Executed high-rate A/B movement experiment. Measured stationary differential RCPI0-RCPI1 mean of **-19.04 dB** vs movement mean of **-25.64 dB**. High-entropy C-RXV Word 7 exhibited 106 unique values (var 2.18e18) under stationary conditions vs 62 unique values (var 5.42e17) under movement.
+**MODEL ACCURACY BENCHMARK:**
+- Model 1 (Absolute RSSI Only): **43.3%** Test Accuracy
+- Model 2 (Differential RCPI): **46.2%** Test Accuracy
+- Model 3 (RXV Telemetry Only): **45.2%** Test Accuracy
+- Model 4 (Combined Features): **59.6%** Test Accuracy (F1 Score: **0.75**, Precision: **1.00**, Recall: **0.60**)
 
-**FINAL SENSING CLASSIFICATION:** **`B. USEFUL COARSE SENSING`**.
+**VERDICT DECLARATION:** **`B = PROMISING BUT MORE VALIDATION REQUIRED`**.
 
 **POST-TEST ROLLBACK COMPLETE:** Controlled rollback restored stock in-tree signed driver stack (`/lib/modules/.../mt7925e.ko.zst`) in <1 second. Primary SSH route on `eno1` remained 100% active throughout.
 
@@ -23,7 +27,7 @@
 - Canonical Kernel Source Provenance: Launchpad `Ubuntu-hwe-7.0-7.0.0-28.28~24.04.1` git commit `917185778`. `[RUNTIME PROVEN]`
 - Reproducible Build Automation: `tools/build-high-rate-telemetry.sh` verified functional and clean. `[RUNTIME PROVEN]`
 - Symbol CRC Alignment: 100% match on all exported symbols (`mt792x_get_txpower` CRC `0x310f36d2`). `[RUNTIME PROVEN]`
-- High-Rate Telemetry Execution: DebugFS ring buffer `/sys/kernel/debug/ieee80211/phy23/mt7925_rxv_telemetry` registered and captured 2,413 raw RXV samples. ZERO dropped samples. `[RUNTIME PROVEN]`
+- High-Rate Telemetry Execution: DebugFS ring buffer `/sys/kernel/debug/ieee80211/phy32/mt7925_rxv_telemetry` registered and captured 2,614 raw RXV samples. ZERO dropped samples. `[RUNTIME PROVEN]`
 - Signed out-of-tree modules (`mt7925-common.ko`, `mt7925e.ko`) loaded and accepted under Secure Boot with ZERO symbol errors. `[RUNTIME PROVEN]`
 - MT7925 PCI adapter bound cleanly (`ASIC revision: 79250000`, `HW/SW Version: 0x8a108a10`). `[RUNTIME PROVEN]`
 - Target secondary USB adapter: TP-Link TL-WN722N v1.0, USB VID:PID `0cf3:9271` (Qualcomm Atheros AR9271). Bound to `ath9k_htc`. `[RUNTIME PROVEN]`
@@ -44,8 +48,8 @@
 
 ## Declaration
 
-MT7925 High-Rate Telemetry Status: **`PASS [RUNTIME PROVEN]`**.
+MT7925 Passive Movement Sensing Status: **`PASS [RUNTIME PROVEN]`**.
 
-Sensing Classification: **`B. USEFUL COARSE SENSING`**.
+Final Classification Verdict: **`B = PROMISING BUT MORE VALIDATION REQUIRED`**.
 
 Final driver state: Stock signed driver `mt7925e.ko.zst` active.

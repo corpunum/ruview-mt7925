@@ -18,7 +18,7 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 
 1. **MediaTek MT7925 (Primary / Onboard)**
    - **Type:** Onboard Wi-Fi 7 PCI Express adapter (`14c3:0717`).
-   - **Status:** Active Primary Target. Gate 1 & Gate 2 Driver Replacement `PASS [RUNTIME PROVEN]`. Canonical Patch v3 `icap_trigger` DebugFS node `PASS [RUNTIME PROVEN]` (`docs/MT7925_CANONICAL_ABI_PROOF.md`). Patch v4 Sysfs Control Path `CONTROL_PATH_WORKING` (`docs/MT7925_ICAP_LOCKDOWN_SOLUTION.md`). Patch v5 Two-Stage Testmode Sequence `PASS [RUNTIME PROVEN]` (`docs/PATCH_V5_RUNTIME_PROOF.md`). Passive RX-Vector Telemetry Ring Buffer `PASS [RUNTIME PROVEN]` (`docs/MT7925_RXV_RUNTIME_PROOF.md`). High-Rate Profiling & Movement A/B Experiment complete (`docs/MT7925_HIGHRATE_PROFILING_PROOF.md`). Declared `B. USEFUL COARSE SENSING`.
+   - **Status:** Active Primary Target. Gate 1 & Gate 2 Driver Replacement `PASS [RUNTIME PROVEN]`. Canonical Patch v3 `icap_trigger` DebugFS node `PASS [RUNTIME PROVEN]` (`docs/MT7925_CANONICAL_ABI_PROOF.md`). Patch v4 Sysfs Control Path `CONTROL_PATH_WORKING` (`docs/MT7925_ICAP_LOCKDOWN_SOLUTION.md`). Patch v5 Two-Stage Testmode Sequence `PASS [RUNTIME PROVEN]` (`docs/PATCH_V5_RUNTIME_PROOF.md`). Passive RX-Vector Telemetry Ring Buffer `PASS [RUNTIME PROVEN]` (`docs/MT7925_RXV_RUNTIME_PROOF.md`). High-Rate Profiling complete (`docs/MT7925_HIGHRATE_PROFILING_PROOF.md`). Passive Sensing & Blind Classification Proof complete (`docs/MT7925_PASSIVE_SENSING_PROOF.md`). Declared `B = PROMISING BUT MORE VALIDATION REQUIRED`.
    - **Documentation:** [`hardware/mt7925/README.md`](../hardware/mt7925/README.md)
 
 2. **TP-Link TL-WN722N v1.0 (Secondary / USB Injector)**
@@ -72,10 +72,11 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 - **Sysfs Control Path Status:** **`CONTROL_PATH_WORKING`**. Bypassed Secure Boot kernel lockdown DebugFS write restrictions cleanly without disabling Secure Boot (`docs/MT7925_ICAP_LOCKDOWN_SOLUTION.md`).
 - **8-Byte Response Deconstruction:** Decoded `46 00 00 00 00 00 00 00` as `struct mt7925_mcu_uni_event` (`cid=0x46`, `status=0x00` [`STATUS_SUCCESS`]). Authored [`docs/MT7925_MCU_TESTMODE_FORENSICS.md`](MT7925_MCU_TESTMODE_FORENSICS.md).
 
-### 2026-08-08: Authorized High-Rate Telemetry Profiling & Movement A/B Experiment Complete
-- **Main Commit SHA:** `2fea3b1`
-- **Reproducible Build Script:** Authored [`tools/build-high-rate-telemetry.sh`](../tools/build-high-rate-telemetry.sh).
-- **Bottleneck Profiling:** Proved `rx_pkts == rx_rxv` (1:1 conversion ratio). Previous ~1.2 PPS rate was caused by managed AP frame filtering. Setting MT7925 to promiscuous monitor mode on Channel 6 HT20 boosted capture rate to **65.0 to 117.6 samples/sec** (captured 2,413 raw RXV samples across runs with ZERO dropped samples). Authored [`docs/MT7925_HIGHRATE_PROFILING_PROOF.md`](MT7925_HIGHRATE_PROFILING_PROOF.md).
-- **Movement A/B Experiment:** Measured stationary differential RCPI0-RCPI1 mean of **-19.04 dB** vs movement mean of **-25.64 dB**. High-entropy C-RXV Word 7 exhibited 106 unique values (var 2.18e18) under stationary conditions vs 62 unique values (var 5.42e17) under movement.
+### 2026-08-08: Authorized Movement Sensing & Blind Classification Complete
+- **Main Commit SHA:** `PENDING_COMMIT`
+- **Accumulated Dataset Evaluation:** Analyzed 2,614 total raw RXV samples across 35 proven binary artifacts.
+- **Blind Classification Performance:** Evaluated 4 models on unseen test split data (154 Train, 104 Test). Model 1 (Absolute RSSI) = 43.3%, Model 2 (Differential RCPI) = 46.2%, Model 3 (RXV Telemetry) = 45.2%, Model 4 (Combined) = **59.6% Test Accuracy** (F1: **0.75**, Precision: **1.00**, Recall: **0.60**). Authored [`docs/MT7925_PASSIVE_SENSING_PROOF.md`](MT7925_PASSIVE_SENSING_PROOF.md).
+- **Confounder & Negative Control Analysis:** Proved packet injection rate variations do NOT trigger false movement predictions.
+- **Final Verdict:** **`B = PROMISING BUT MORE VALIDATION REQUIRED`**.
 - **Controlled Rollback:** Controlled rollback restored stock in-tree signed driver `/lib/modules/.../mt7925e.ko.zst` in <1 second (`PASS`).
 - **Final Driver State:** Stock signed driver active (`PASS`).
