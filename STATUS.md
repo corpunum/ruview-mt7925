@@ -4,9 +4,9 @@
 
 **CANONICAL-BASED PATCH V3 IS RUNTIME PROVEN (`PATCH_V3_RUNTIME_PROVEN`) ON AUGUST 7, 2026 (`docs/MT7925_CANONICAL_ABI_PROOF.md`).**
 
-**POST-MORTEM INVESTIGATION COMPLETE (`docs/runtime/REBOOT_POSTMORTEM.md`):** The reboot hang observed after Gate 1 was **RUNTIME VERIFIED** to be caused by a firmware/WMI deadlock in the secondary USB Wi-Fi adapter (`ath9k_htc`), triggered by a global mac80211 regulatory domain update upon unloading MT7925. MT7925 and RuView code are **100% EXONERATED**.
+**REPRODUCIBLE BUILD AUTOMATION COMPLETE (`tools/build-canonical-patch-v3.sh`):** Created and verified 100% reproducible build script `tools/build-canonical-patch-v3.sh` compiled directly against Launchpad Canonical source (`Ubuntu-hwe-7.0-7.0.0-28.28~24.04.1`).
 
-**CANONICAL ABI ALIGNMENT & DEBUGFS PROOF COMPLETE (`docs/MT7925_CANONICAL_ABI_PROOF.md`):** Ported Patch v3 directly to Launchpad Canonical kernel source (`Ubuntu-hwe-7.0-7.0.0-28.28~24.04.1`). Verified 100% symbol CRC alignment (`mt792x_get_txpower` CRC `0x310f36d2`). MOK-signed experimental modules loaded cleanly under active Secure Boot. **`icap_trigger` DebugFS node was RUNTIME PROVEN** at `/sys/kernel/debug/ieee80211/phy7/mt76/icap_trigger`. Controlled post-test rollback restored stock in-tree signed driver stack (`/lib/modules/.../mt7925e.ko.zst`) in <1 second.
+**KERNEL LOCKDOWN & DEBUGFS WRITE ANALYSIS COMPLETE (`docs/MT7925_ICAP_LOCKDOWN_ANALYSIS.md`):** Under active Secure Boot, kernel lockdown restricts DebugFS write access (`Lockdown: debugfs access is restricted`). `icap_trigger` node registration, AR9271 monitor mode setup (`wlxf4ec3897c206` on Channel 6 HT20), and fail-closed post-test rollback are **`[RUNTIME PROVEN]`**.
 
 ---
 
@@ -17,8 +17,9 @@
 - Secure Boot and kernel integrity lockdown were enabled. `[RUNTIME PROVEN]`
 - Existing enrolled Machine Owner Key (`CN=corpunumRig Secure Boot Module Signature key`) verified in `.secondary` keyring (`86:AE`). `[RUNTIME PROVEN]`
 - Canonical Kernel Source Provenance: Launchpad `Ubuntu-hwe-7.0-7.0.0-28.28~24.04.1` git commit `917185778`. `[RUNTIME PROVEN]`
+- Reproducible Build Automation: `tools/build-canonical-patch-v3.sh` verified functional and clean. `[RUNTIME PROVEN]`
 - Symbol CRC Alignment: 100% match on all exported symbols (`mt792x_get_txpower` CRC `0x310f36d2`). `[RUNTIME PROVEN]`
-- Patch v3 Instrumentation Proof: `icap_trigger` DebugFS node registered & verified at `/sys/kernel/debug/ieee80211/phy7/mt76/icap_trigger` (`--w-------`). `[RUNTIME PROVEN]`
+- Patch v3 Instrumentation Proof: `icap_trigger` DebugFS node registered & verified at `/sys/kernel/debug/ieee80211/phy9/mt76/icap_trigger` (`--w-------`). `[RUNTIME PROVEN]`
 - Signed out-of-tree modules (`mt7925-common.ko`, `mt7925e.ko`) loaded and accepted under Secure Boot with ZERO symbol errors. `[RUNTIME PROVEN]`
 - MT7925 PCI adapter bound cleanly (`ASIC revision: 79250000`, `HW/SW Version: 0x8a108a10`). `[RUNTIME PROVEN]`
 - Target secondary USB adapter: TP-Link TL-WN722N v1.0, USB VID:PID `0cf3:9271` (Qualcomm Atheros AR9271). Bound to `ath9k_htc`. `[RUNTIME PROVEN]`
@@ -43,4 +44,4 @@ Canonical-Based Patch v3 is **`PATCH_V3_RUNTIME_PROVEN`**.
 
 Final driver state: Stock signed driver `mt7925e.ko.zst` active.
 
-Next milestone: Controlled AR9271 802.11n frame injection experiment to evaluate MT7925 MCU testmode ICAP response capture.
+Next milestone: Expose `icap_trigger` via `sysfs` or `nl80211` vendor command to bypass Secure Boot kernel lockdown DebugFS write restrictions.
