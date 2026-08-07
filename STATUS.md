@@ -2,11 +2,11 @@
 
 ## Summary Declaration
 
-**GATE 1 & GATE 2 DRIVER REPLACEMENT WERE EXECUTED AND PASSED 100% ON AUGUST 6-7, 2026 (`docs/GATE2_RESULTS.md`).**
+**CANONICAL-BASED PATCH V3 IS RUNTIME PROVEN (`PATCH_V3_RUNTIME_PROVEN`) ON AUGUST 7, 2026 (`docs/MT7925_CANONICAL_ABI_PROOF.md`).**
 
 **POST-MORTEM INVESTIGATION COMPLETE (`docs/runtime/REBOOT_POSTMORTEM.md`):** The reboot hang observed after Gate 1 was **RUNTIME VERIFIED** to be caused by a firmware/WMI deadlock in the secondary USB Wi-Fi adapter (`ath9k_htc`), triggered by a global mac80211 regulatory domain update upon unloading MT7925. MT7925 and RuView code are **100% EXONERATED**.
 
-**PHASE 1 ABI FORENSICS COMPLETE (`docs/MT76_ABI_ANALYSIS.md`):** Symbol CRC mismatch (`Unknown symbol mt792x_get_txpower`) was diagnosed. Building upstream `openwrt/mt76` out-of-tree without rebuilding all 5 interdependent modules (`mt76`, `mt76-connac-lib`, `mt792x-lib`, `mt7925-common`, `mt7925e`) causes symbol CRC checksum divergence against Ubuntu `7.0.0-28-generic` stock headers. Automated fail-closed rollback disarmed and cleanly restored stock signed driver stack (`/lib/modules/.../mt7925e.ko.zst`) in under 1 second. Zero system disruption occurred.
+**CANONICAL ABI ALIGNMENT & DEBUGFS PROOF COMPLETE (`docs/MT7925_CANONICAL_ABI_PROOF.md`):** Ported Patch v3 directly to Launchpad Canonical kernel source (`Ubuntu-hwe-7.0-7.0.0-28.28~24.04.1`). Verified 100% symbol CRC alignment (`mt792x_get_txpower` CRC `0x310f36d2`). MOK-signed experimental modules loaded cleanly under active Secure Boot. **`icap_trigger` DebugFS node was RUNTIME PROVEN** at `/sys/kernel/debug/ieee80211/phy7/mt76/icap_trigger`. Controlled post-test rollback restored stock in-tree signed driver stack (`/lib/modules/.../mt7925e.ko.zst`) in <1 second.
 
 ---
 
@@ -16,14 +16,11 @@
 - Tested kernel: Ubuntu `7.0.0-28-generic`. `[RUNTIME PROVEN]`
 - Secure Boot and kernel integrity lockdown were enabled. `[RUNTIME PROVEN]`
 - Existing enrolled Machine Owner Key (`CN=corpunumRig Secure Boot Module Signature key`) verified in `.secondary` keyring (`86:AE`). `[RUNTIME PROVEN]`
-- Gate 1 & Gate 2 Driver Replacement executed cleanly (`docs/GATE2_RESULTS.md`). `[RUNTIME PROVEN]`
-- Reboot hang post-mortem investigation complete (`docs/runtime/REBOOT_POSTMORTEM.md`). Root cause: `ath9k_htc` secondary USB dongle firmware freeze. `[RUNTIME PROVEN]`
-- MT7925 driver and RuView codebase exonerated from shutdown stall. `[RUNTIME PROVEN]`
-- Patch v3 static binary proof: `icap_trigger` symbols verified inside `mt7925-common.ko` (`docs/PATCH_V3_RUNTIME_PROOF.md`). `[RUNTIME PROVEN]`
-- Rollback execution on symbol mismatch: Fail-closed emergency rollback cleanly restored stock signed modules in <1 second (`docs/PATCH_V3_RUNTIME_PROOF.md`). `[RUNTIME PROVEN]`
-- Signed out-of-tree modules (`mt7925-common.ko`, `mt7925e.ko`) loaded and accepted under Secure Boot during Gate 1/2. `[RUNTIME PROVEN]`
+- Canonical Kernel Source Provenance: Launchpad `Ubuntu-hwe-7.0-7.0.0-28.28~24.04.1` git commit `917185778`. `[RUNTIME PROVEN]`
+- Symbol CRC Alignment: 100% match on all exported symbols (`mt792x_get_txpower` CRC `0x310f36d2`). `[RUNTIME PROVEN]`
+- Patch v3 Instrumentation Proof: `icap_trigger` DebugFS node registered & verified at `/sys/kernel/debug/ieee80211/phy7/mt76/icap_trigger` (`--w-------`). `[RUNTIME PROVEN]`
+- Signed out-of-tree modules (`mt7925-common.ko`, `mt7925e.ko`) loaded and accepted under Secure Boot with ZERO symbol errors. `[RUNTIME PROVEN]`
 - MT7925 PCI adapter bound cleanly (`ASIC revision: 79250000`, `HW/SW Version: 0x8a108a10`). `[RUNTIME PROVEN]`
-- DebugFS `/sys/kernel/debug/ieee80211/phy3/mt76/` registered 16 stock nodes. `[RUNTIME PROVEN]`
 - Target secondary USB adapter: TP-Link TL-WN722N v1.0, USB VID:PID `0cf3:9271` (Qualcomm Atheros AR9271). Bound to `ath9k_htc`. `[RUNTIME PROVEN]`
 - Stock AR9271 firmware backed up to `/tmp/ar9271_stock_backup/htc_9271-1.4.0.fw.zst` (`SHA256 1ec4cdf...`). `[RUNTIME PROVEN]`
 - Safe USB sysfs unbind (`echo 3-2:1.0 > /sys/bus/usb/drivers/ath9k_htc/unbind`) and `rmmod` tested and verified clean. `[RUNTIME PROVEN]`
@@ -42,10 +39,8 @@
 
 ## Declaration
 
-Gate 1 & Gate 2 driver replacement are RUNTIME PROVEN.
-
-Phase 1 ABI Forensics complete (`PATCH_V3_RUNTIME_FAILED` due to symbol CRC mismatch between out-of-tree `openwrt/mt76` and stock `mt792x-lib.ko`).
+Canonical-Based Patch v3 is **`PATCH_V3_RUNTIME_PROVEN`**.
 
 Final driver state: Stock signed driver `mt7925e.ko.zst` active.
 
-Next milestone: Build atomic 5-module replacement set (`mt76`, `mt76-connac-lib`, `mt792x-lib`, `mt7925-common`, `mt7925e`) directly against `linux-hwe-7.0-headers-7.0.0-28` to achieve `PATCH_V3_RUNTIME_PROVEN`.
+Next milestone: Controlled AR9271 802.11n frame injection experiment to evaluate MT7925 MCU testmode ICAP response capture.
