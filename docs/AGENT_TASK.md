@@ -73,7 +73,7 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 - **8-Byte Response Deconstruction:** Decoded `46 00 00 00 00 00 00 00` as `struct mt7925_mcu_uni_event` (`cid=0x46`, `status=0x00` [`STATUS_SUCCESS`]). Authored [`docs/MT7925_MCU_TESTMODE_FORENSICS.md`](MT7925_MCU_TESTMODE_FORENSICS.md).
 
 ### 2026-08-08: Authorized Movement Sensing & Blind Classification Complete
-- **Main Commit SHA:** `PENDING_COMMIT`
+- **Main Commit SHA:** `0adc5f8`
 - **Accumulated Dataset Evaluation:** Analyzed 2,614 total raw RXV samples across 35 proven binary artifacts.
 - **Blind Classification Performance:** Evaluated 4 models on unseen test split data (154 Train, 104 Test). Model 1 (Absolute RSSI) = 43.3%, Model 2 (Differential RCPI) = 46.2%, Model 3 (RXV Telemetry) = 45.2%, Model 4 (Combined) = **59.6% Test Accuracy** (F1: **0.75**, Precision: **1.00**, Recall: **0.60**). Authored [`docs/MT7925_PASSIVE_SENSING_PROOF.md`](MT7925_PASSIVE_SENSING_PROOF.md).
 - **Confounder & Negative Control Analysis:** Proved packet injection rate variations do NOT trigger false movement predictions.
