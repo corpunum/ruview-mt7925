@@ -1,6 +1,6 @@
-# TP-Link TL-WN722N v1.0 Sensing Hardware Specifications (`hardware/tl-wn722n/README.md`)
+# TP-Link TL-WN722N v1.0 Hardware & CSI Assessment (`hardware/tl-wn722n/README.md`)
 
-This document records the exact hardware identification, driver stack, and CSI research options for the USB TP-Link TL-WN722N Wi-Fi adapter.
+This document records the exact hardware identification, driver stack, and CSI feasibility analysis for the USB TP-Link TL-WN722N Wi-Fi adapter.
 
 ---
 
@@ -13,17 +13,17 @@ This document records the exact hardware identification, driver stack, and CSI r
 - **Bound Linux Driver:** `ath9k_htc` `[RUNTIME PROVEN]`
 - **Chipset Family:** Qualcomm Atheros AR9271 (802.11n 1x1 SISO) `[RUNTIME PROVEN]`
 - **Hardware Revision:** **TL-WN722N v1.0 / v1.1** `[RUNTIME PROVEN]` (VID `0cf3` PID `9271` conclusively identifies v1.0; Realtek-based v2/v3 use Realtek VIDs `0bda`).
-- **Firmware Loaded:** `ath9k_htc/htc_9271-1.4.0.fw` `[RUNTIME PROVEN]`
+- **Loaded Firmware:** `ath9k_htc/htc_9271-1.4.0.fw` `[RUNTIME PROVEN]`
+- **Stock Firmware SHA256:** `1ec4cdf426d32602034cb4731b618155911b4afc863b7e0d19407937cbd1c2a2` `[RUNTIME PROVEN]`
+- **Stock Firmware Backup:** Preserved at `/tmp/ar9271_stock_backup/htc_9271-1.4.0.fw.zst` `[RUNTIME PROVEN]`
 
 ---
 
 ## 2. CSI Capability Analysis
 
-1. **CSI Feasibility:** Technical extraction is **PROVEN POSSIBLE** via open-source firmware.
-2. **Open-Source Ecosystem:** Supported by `open-ath9k-htc-firmware` (MagikCSI / Atheros CSI Tool project).
-3. **Extraction Mechanism:** Requires replacing `htc_9271-1.4.0.fw` in `/lib/firmware/ath9k_htc/` with open-source CSI firmware, and reading Netlink CSI frame structures.
-4. **Bandwidth & Subcarriers:** 20 MHz (56 subcarriers) / 40 MHz (114 subcarriers), 1x1 SISO.
-5. **Role in RuView:** Secondary baseline reference adapter for verifying MT7925 2x2 MIMO algorithms.
+1. **CSI Feasibility:** **`CSI_RUNTIME_FAILED`** (AR9271 USB HTC firmware architecture does not expose raw OFDM subcarrier CSI matrices).
+2. **Atheros CSI Tool Support:** Requires PCI/PCIe Atheros hardware (`AR9344`, `AR9580`, `AR9590`); USB `ath9k_htc` is unsupported by `ar9003_csi.ko`.
+3. **Role in RuView Platform:** Secondary Traffic Generator / Packet Injector. The TL-WN722N v1.0 excels at monitor mode frame injection, acting as a controlled transmitter to feed frames to the MT7925 during Gate 2 testing.
 
 ---
 

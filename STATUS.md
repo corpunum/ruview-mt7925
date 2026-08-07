@@ -22,7 +22,9 @@
 - Signed out-of-tree modules (`mt7925-common.ko`, `mt7925e.ko`) loaded and accepted under Secure Boot. `[RUNTIME PROVEN]`
 - MT7925 PCI adapter bound cleanly (`ASIC revision: 79250000`, `HW/SW Version: 0x8a108a10`). `[RUNTIME PROVEN]`
 - Target secondary USB adapter: TP-Link TL-WN722N v1.0, USB VID:PID `0cf3:9271` (Qualcomm Atheros AR9271). Bound to `ath9k_htc`. `[RUNTIME PROVEN]`
+- Stock AR9271 firmware backed up to `/tmp/ar9271_stock_backup/htc_9271-1.4.0.fw.zst` (`SHA256 1ec4cdf...`). `[RUNTIME PROVEN]`
 - Safe USB sysfs unbind (`echo 3-2:1.0 > /sys/bus/usb/drivers/ath9k_htc/unbind`) and `rmmod` tested and verified clean. `[RUNTIME PROVEN]`
+- AR9271 CSI Feasibility Evaluation: **`CSI_RUNTIME_FAILED`** (AR9271 USB HTC firmware architecture does not expose raw OFDM subcarrier CSI matrices). Authored [`docs/AR9271_CSI_ANALYSIS.md`](docs/AR9271_CSI_ANALYSIS.md). `[RUNTIME PROVEN]`
 - Primary SSH route uses wired Ethernet (`eno1`, metric 100). SSH remained 100% active throughout driver replacement. `[RUNTIME PROVEN]`
 - Automated rollback daemon (`tools/runtime/prepare-rollback.sh`) disarmed cleanly upon success. `[RUNTIME PROVEN]`
 - Stock driver restoration script (`tools/runtime/rollback-mt7925.sh`) restored in-tree stock signed modules post-test. `[RUNTIME PROVEN]`
@@ -40,8 +42,6 @@
 
 MT7925 Gate 1 driver replacement is RUNTIME PROVEN. MT7925 Gate 2 is READY.
 
-TL-WN722N v1.0 hardware is RUNTIME PROVEN & BOUND to `ath9k_htc`. Fail-closed USB unbind isolation is verified.
+TL-WN722N v1.0 hardware is RUNTIME PROVEN. Stock firmware backed up (`SHA256 1ec4cdf...`). AR9271 raw CSI extraction is `CSI_RUNTIME_FAILED` (unsupported by USB HTC firmware architecture). Serves as secondary packet injector.
 
 Next milestone: Await explicit user authorization for MT7925 Gate 2 execution.
-
-Actual CSI extraction is not proven on either device.
