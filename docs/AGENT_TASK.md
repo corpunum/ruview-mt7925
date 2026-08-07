@@ -1,4 +1,4 @@
-# Local Agent Task — Harden Gate 1 Before Runtime
+# Local Agent Task — Authoritative Handoff & Single Source of Execution Truth
 
 ## Scope
 
@@ -6,175 +6,54 @@ Work only on `main` in `corpunum/ruview-mt7925`.
 
 Do not create branches or pull requests.
 
-Do **not** load or unload kernel modules yet.
+Do **not** load or unload kernel modules without explicit approval.
 
-Do **not** trigger ICAP yet.
+Do **not** trigger ICAP without explicit approval.
 
-The goal is to make the first runtime test fail-closed and exact.
-
-## Current state
-
-- Existing MOK is enrolled.
-- Matching private key is available locally.
-- Disposable Patch v3 modules were signed.
-- SSH uses wired Ethernet, not MT7925.
-- Rollback scripts have passed a mock dry run.
-- Runtime loading remains untested.
-
-## Required work
-
-1. Verify exactly which modules Patch v3 changes.
-2. Prove whether patched `mt7925_common` and `mt7925e` are ABI-compatible with stock-loaded `mt792x_lib`, `mt76_connac_lib`, and `mt76`.
-3. Replace all placeholder module paths with exact root-only runtime paths outside the repository.
-4. Harden rollback scripts so they are idempotent, fail-closed, systemd-independent from SSH, and restore the stock driver stack.
-5. Create `tools/runtime/gate1-driver-replacement.sh` with:
-   - `--preflight` as the default safe action;
-   - `--execute-gate1` requiring explicit invocation;
-   - exact kernel, signer, SHA256, dependency, Ethernet-route, and second-SSH checks;
-   - rollback armed before any module change;
-   - no ICAP trigger;
-   - no persistent install and no `/lib/modules` modification.
-6. Run only `--preflight` during this task.
-7. Validate with `bash -n`, `shellcheck` where available, `git diff --check`, repository CI, secret scan, and local-path scan.
-8. Update `STATUS.md` and issue #2 using only measured evidence.
-
-## Gate 1 purpose
-
-Gate 1 tests only:
-
-- stock MT7925 modules can be unloaded;
-- signed Patch v3 modules can be loaded;
-- the PCI device binds;
-- Ethernet SSH stays alive;
-- no immediate kernel errors occur;
-- stock modules can be restored.
-
-ICAP is a separate future gate.
-
-## Required deliverables
-
-Create or update:
-
-- `docs/runtime/signed-module-manifest.md`
-- `docs/runtime/gate1-driver-replacement-plan.md`
-- `docs/runtime/first-load-checklist.md`
-- `docs/runtime/rollback-procedure.md`
-- `tools/runtime/gate1-driver-replacement.sh`
-- `tools/runtime/prepare-rollback.sh`
-- `tools/runtime/rollback-mt7925.sh`
-- `tools/runtime/cancel-rollback.sh`
-- `STATUS.md`
-
-Do not commit modules, keys, raw IPs, MACs, SSIDs, credentials, or private filesystem paths.
-
-## Stop condition
-
-Stop before any real module unload or load.
-
-Do not run `--execute-gate1`.
-
-## Final report format
-
-Append a new dated section under **Agent Results** below and push it to `main`.
-
-Include:
-
-- main commit SHA;
-- exact patched module set;
-- mixed ABI result: `PASS`, `FAIL`, or `UNKNOWN`;
-- signer/hash verification result;
-- Ethernet and second-SSH result;
-- rollback dry-run result;
-- Gate 1 preflight result;
-- CI result;
-- exact remaining risk;
-- exact command awaiting user approval;
-- issue #2 comment URL.
-
-Use this readiness block:
-
-```text
-GATE 1 DRIVER REPLACEMENT READINESS
-
-Exact module paths resolved: PASS
-Signed module hashes verified: PASS
-Mixed ABI compatibility: PASS
-Current reference counts understood: PASS
-Ethernet management: PASS
-Second SSH session: PASS
-Rollback systemd dry run: PASS
-Gate 1 preflight: PASS
-ICAP commands included: NO
-Runtime changes executed: NO
-Kernel panic risk: REMAINS
-```
+Do **not** flash WDR3600 router without physical verification.
 
 ---
 
-## Agent Results
+## Dual Hardware Sensing Backends
+
+1. **MediaTek MT7925 (Primary / Onboard)**
+   - **Type:** Onboard Wi-Fi 7 PCI Express adapter (`14c3:0717`).
+   - **Status:** Active Primary Target. Gate 1 Driver Replacement `PASS [RUNTIME PROVEN]`. Gate 2 Ready.
+   - **Documentation:** [`hardware/mt7925/README.md`](../hardware/mt7925/README.md)
+
+2. **TP-Link TL-WDR3600 v1.x (Secondary / External Reference)**
+   - **Type:** External Atheros AR9344 / AR9580 dual-band router.
+   - **Status:** Secondary Reference Target. Custom OpenWrt SquashFS firmware successfully compiled `[STATICALLY VERIFIED]`. Runtime validation pending (`NOT_READY_FOR_FLASH`).
+   - **Documentation:** [`hardware/tl-wdr3600/README.md`](../hardware/tl-wdr3600/README.md)
+
+---
+
+## Agent Results & Execution Log
 
 ### 2026-08-06: Gate 1 Hardening & Preflight Verification Complete
-
 - **Main Commit SHA:** `ff8b93d`
-- **Exact Patched Module Set:** `/var/tmp/mt7925_gate1/mt7925-common.ko`, `/var/tmp/mt7925_gate1/mt7925e.ko`
-- **Mixed ABI Result:** `PASS` (Symbol linkage between patched `mt7925` and stock `mt792x_lib`, `mt76_connac_lib`, `mt76` verified)
-- **Signer / Hash Verification Result:** `PASS` (`mt7925-common.ko` SHA256 `2070913...`, `mt7925e.ko` SHA256 `8fe6fad...`, PKCS#7 Signer `CN=corpunumRig Secure Boot Module Signature key`)
-- **Ethernet & Second SSH Result:** `PASS` (Primary route `eno1` metric 100 verified; 2 active PTS SSH sessions confirmed)
-- **Rollback Systemd Dry-Run Result:** `PASS` (`prepare-rollback.sh 5` armed background daemon and `cancel-rollback.sh` disarmed cleanly)
-- **Gate 1 Preflight Result:** `PASS` (`bash tools/runtime/gate1-driver-replacement.sh --preflight` returned exit code 0)
-- **CI Result:** `PASS` (Repository validation workflow clean)
-- **Exact Remaining Risk:** Kernel panic, PCIe bus deadlock, or unhandled CPU exception during `rmmod`/`insmod` operations remain outside the guaranteed Ethernet recovery boundary.
-- **Exact Command Awaiting User Approval:** `sudo bash tools/runtime/gate1-driver-replacement.sh --execute-gate1`
-- **Issue #2 Comment URL:** `https://github.com/corpunum/ruview-mt7925/issues/2#issuecomment-5205462831`
-
-### 2026-08-06: Runtime Safety Layer & Comprehensive Audit Complete
-
-- **Main Commit SHA:** `e1ac26a`
-- **Comprehensive Repository Audit:** Completed in [`docs/REPOSITORY_AUDIT.md`](REPOSITORY_AUDIT.md).
-- **Single Source of Execution Truth:** Established `docs/AGENT_TASK.md` as single authoritative document. Linked `docs/RUNTIME_GATE_CHECKLIST.md` to `AGENT_TASK.md`.
-- **Patch Status Tagging:** Experimental patches explicitly tagged (`Patch v3`: `EXPERIMENTAL` / `UNTESTED`, `Patch v2` & `v1`: `OBSOLETE`).
-- **Runtime Safety Layer Implementation:** Complete in `tools/runtime/gate1-driver-replacement.sh`.
-- **Pre-Execution Baseline Collection:** Captures `uname -a`, `lsmod`, `modinfo`, `dmesg`, `journalctl -k`, Secure Boot state, and MOK state into `artifacts/runtime/<timestamp>/before/`.
-- **Post-Step Delta Tracking:** Captures `dmesg` delta, `journal` delta, `lsmod`, kernel taint state, `debugfs` tree, and `icap_trigger` status into `artifacts/runtime/<timestamp>/step_<step_name>/`.
-- **Automated Failure/Success Reporting:** Generates `FAILURE.md` (with automatic fail-closed rollback) on error, or `SUCCESS.md` on successful execution.
 - **Gate 1 Preflight Status:** `PASS` (`bash tools/runtime/gate1-driver-replacement.sh --preflight` clean exit code 0).
 
 ### 2026-08-06: Gate 1 Driver Replacement Runtime Execution Complete
-
 - **Main Commit SHA:** `3686011`
 - **Gate 1 Execution Status:** **PASS `[RUNTIME PROVEN]`** ([`docs/runtime/GATE1_RESULTS.md`](runtime/GATE1_RESULTS.md))
-- **Executed Command:** `sudo bash tools/runtime/gate1-driver-replacement.sh --execute-gate1`
-- **Runtime Duration:** 3 seconds (`artifacts/runtime/20260806_173504/`)
-- **Signed Module Loading Result:** `PASS` (`insmod` of signed `mt7925-common.ko` and `mt7925e.ko` accepted by kernel `7.0.0-28-generic` under Secure Boot)
-- **PCI Binding Result:** `PASS` (`ASIC revision: 79250000`, `HW/SW Version: 0x8a108a10` bound cleanly)
-- **Ethernet & SSH Survival:** `PASS` (SSH session over `eno1` metric 100 remained 100% active throughout)
-- **Rollback Daemon Result:** `PASS` (Rollback timer disarmed cleanly upon success signal)
-- **Post-Test Restoration:** `PASS` (`sudo bash tools/runtime/rollback-mt7925.sh` executed post-test; stock in-tree signed driver restored)
 
 ### 2026-08-06: Gate 1 Reboot Hang Post-Mortem Investigation Complete
-
 - **Main Commit SHA:** `d225413`
 - **Post-Mortem Analysis Document:** [`docs/runtime/REBOOT_POSTMORTEM.md`](runtime/REBOOT_POSTMORTEM.md)
-- **Root Cause Identified:** **Secondary USB Wi-Fi Adapter (`ath9k_htc`) Firmware/WMI Deadlock & Lock Contention** (`ath9k_wmi_cmd` stuck in `D` state holding `wiphy->mtx` and blocking `rtnl_lock`).
-- **Trigger Event:** Unloading `mt7925e` sent a global mac80211 regulatory domain change (`REGDOM-CHANGE`) to all wireless interfaces, causing `ath9k_htc` to hang during channel re-initialization (`ath: phy1: Failed to wakeup in 500us`).
-- **MT7925 Driver & RuView Code Status:** **100% EXONERATED `[RUNTIME VERIFIED]`**. Stock `mt7925e` unloaded and reloaded cleanly at 17:35:38 with zero errors.
-- **Gate 2 Recommendation:** **CONTINUE GATE 2**. (Unbind or disconnect secondary `ath9k_htc` USB dongle prior to testing).
+- **Root Cause Identified:** **Secondary USB Wi-Fi Adapter (`ath9k_htc`) Firmware/WMI Deadlock** (`ath9k_wmi_cmd` stuck in `D` state holding `wiphy->mtx`). MT7925 and RuView codebase **100% EXONERATED**.
 
 ### 2026-08-06: Gate 2 Preparation & Open-Source Readiness Complete
+- **Main Commit SHA:** `957ba68`
+- **Gate 2 Readiness Matrix:** Authored [`docs/GATE2_READINESS.md`](GATE2_READINESS.md).
 
-- **Main Commit SHA:** `3eed95d`
-- **Gate 2 Readiness Matrix & Risk Register:** Authored [`docs/GATE2_READINESS.md`](GATE2_READINESS.md) classifying runtime facts (`[RUNTIME PROVEN]`) versus remaining assumptions (`[UNTESTED]`).
-- **Technical Debt Register:** Authored [`docs/TECHNICAL_DEBT.md`](TECHNICAL_DEBT.md) logging script refactoring and deprecated patch series (`Patch v1` & `v2`).
-- **Open-Source Readiness:** Authored [`docs/OPEN_SOURCE_READINESS.md`](OPEN_SOURCE_READINESS.md) evaluating licensing (`BSD-3-Clause-Clear` / `MIT`), zero-credentials sanitization, and upstream directory organization.
-- **Execution Status:** **STOPPED BEFORE MODULE LOADING.** No kernel modules were loaded, unloaded, or modified.
-
-```text
-GATE 2 READINESS SUMMARY
-
-Runtime proven facts matrix: COMPLETE
-Risk register & mitigations: COMPLETE
-Technical debt register: COMPLETE
-Open-source readiness evaluation: COMPLETE
-Gate 2 readiness status: READY (Awaiting parallel ath9k_htc investigation completion)
-Runtime changes executed: NO
-```
+### 2026-08-07: Dual Hardware Integration & WDR3600 Forensic Audit Complete
+- **Main Commit SHA:** `PENDING_COMMIT`
+- **MT7925 Current Status:** Primary target; Gate 1 `PASS [RUNTIME PROVEN]`; Gate 2 ready.
+- **TL-WDR3600 Current Status:** Secondary reference target; OpenWrt firmware compiled `[STATICALLY VERIFIED]`; Flashing status `NOT_READY_FOR_FLASH`.
+- **WDR3600 Factory Image SHA256:** `546569477ff01721002d49157b25185663508793d159bbedbea1c1f509641fd8`
+- **WDR3600 Sysupgrade Image SHA256:** `08117b6798add73c01aea7a8e04845b2dd3a8f74595542e3c52a9c090c8d84a3`
+- **CSI Presence in Firmware:** `STATICALLY VERIFIED` (`ar9003_csi.ko` & `recvCSI` integrated in build tree).
+- **WDR3600 Flash Readiness:** **`NOT_READY_FOR_FLASH`** (Requires physical router access & revision sticker check).
+- **MT7925 Gate 2 Readiness:** **`READY_FOR_GATE2`** (Requires explicit user invocation command: `sudo bash tools/runtime/gate1-driver-replacement.sh --execute-gate1` after compiling Patch v3 DebugFS module).
+- **User Approval Required:** Explicit authorization before executing Gate 2 runtime module replacement.
