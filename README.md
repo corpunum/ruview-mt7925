@@ -8,7 +8,7 @@ RuView formally tracks two complementary hardware sensing backends:
 
 1. **MediaTek MT7925 (Primary / Onboard)**
    - **Type:** Onboard Wi-Fi 7 PCI Express adapter (`14c3:0717`).
-   - **Status:** Active Primary Target. Gate 1 & Gate 2 Driver Replacement `PASS [RUNTIME PROVEN]`. Canonical Patch v3 `icap_trigger` DebugFS node `PASS [RUNTIME PROVEN]`. Reproducible build script `tools/build-canonical-patch-v5.sh` `PASS [RUNTIME PROVEN]`. Sysfs Lockdown-Compatible Control Path `PASS [RUNTIME PROVEN]` (`CONTROL_PATH_WORKING`). Patch v5 Two-Stage Testmode Sequence executed cleanly (`STATUS_ONLY` / `CSI_NOT_PROVEN`). ICAP Implementation Mapping complete (`docs/MT7925_ICAP_IMPLEMENTATION_MAP.md`).
+   - **Status:** Active Primary Target. Gate 1 & Gate 2 Driver Replacement `PASS [RUNTIME PROVEN]`. Canonical Patch v3 `icap_trigger` DebugFS node `PASS [RUNTIME PROVEN]`. Reproducible build script `tools/build-canonical-patch-v5.sh` `PASS [RUNTIME PROVEN]`. Sysfs Lockdown-Compatible Control Path `PASS [RUNTIME PROVEN]` (`CONTROL_PATH_WORKING`). Passive RX-Vector Forensics complete (`docs/MT7925_RX_VECTOR_ANALYSIS.md`). Passive Telemetry Design complete (`docs/MT7925_PASSIVE_TELEMETRY_DESIGN.md`). CSI Hardware Alternatives analyzed (`docs/CSI_HARDWARE_ALTERNATIVES.md`).
    - **Documentation:** [`hardware/mt7925/README.md`](hardware/mt7925/README.md)
 
 2. **TP-Link TL-WN722N v1.0 (Secondary / USB Reference & Packet Injector)**
@@ -46,10 +46,10 @@ RuView formally tracks two complementary hardware sensing backends:
 
 > [!WARNING]
 > **PROMINENT CURRENT-STATUS WARNING**
-> - **Patch v5 Two-Stage Testmode Sequence is `PASS [RUNTIME PROVEN]`.**
-> - **All 4 MCU sequence stages (`Power Lock` -> `SWITCH_MODE_RF_TEST` -> `SWITCH_MODE_ICAP` -> `TESTMODE_RX_STAT Query`) executed cleanly without errors.**
-> - **`MCU_UNI_QUERY(TESTMODE_RX_STAT)` returned an 8-byte status response header (`32 00 00 00 bb 00 00 c0`). Result classified: `STATUS_ONLY` / `CSI_NOT_PROVEN`.**
-> - **ICAP Source Implementation Mapping complete (`docs/MT7925_ICAP_IMPLEMENTATION_MAP.md`). Classification: `DECISION C: FIRMWARE BLOCKED / PARTIALLY IMPLEMENTABLE`.**
+> - **MT7925 Operational Path Target: Passive RX-Vector PHY Telemetry.**
+> - **Exposes per-packet `RCPI0-3` (4 antenna chains), TxBF, MCS, BW, NSS, and STBC metrics.**
+> - **ICAP Reverse Engineering Prohibited per User Directives.**
+> - **CSI Hardware Ecosystem Alternatives documented (`docs/CSI_HARDWARE_ALTERNATIVES.md`).**
 > - TL-WN722N v1.0 USB hardware serves as a controlled 802.11n packet injector.
 > - **OpenUnum is completely out of scope.**
 
@@ -59,6 +59,9 @@ RuView formally tracks two complementary hardware sensing backends:
 
 - [Project Status](STATUS.md)
 - [Agent Task & Execution Log](docs/AGENT_TASK.md)
+- [MT7925 RX-Vector Analysis](docs/MT7925_RX_VECTOR_ANALYSIS.md)
+- [Passive Telemetry Patch Design](docs/MT7925_PASSIVE_TELEMETRY_DESIGN.md)
+- [CSI Hardware Ecosystem Alternatives](docs/CSI_HARDWARE_ALTERNATIVES.md)
 - [MT7925 ICAP Implementation Map](docs/MT7925_ICAP_IMPLEMENTATION_MAP.md)
 - [Patch v6 Minimum Design](docs/PATCH_V6_DESIGN.md)
 - [MT7925 ICAP State Machine Forensics](docs/MT7925_ICAP_STATE_MACHINE.md)

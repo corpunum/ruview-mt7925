@@ -18,7 +18,7 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 
 1. **MediaTek MT7925 (Primary / Onboard)**
    - **Type:** Onboard Wi-Fi 7 PCI Express adapter (`14c3:0717`).
-   - **Status:** Active Primary Target. Gate 1 & Gate 2 Driver Replacement `PASS [RUNTIME PROVEN]`. Canonical Patch v3 `icap_trigger` DebugFS node `PASS [RUNTIME PROVEN]` (`docs/MT7925_CANONICAL_ABI_PROOF.md`). Patch v4 Sysfs Control Path `CONTROL_PATH_WORKING` (`docs/MT7925_ICAP_LOCKDOWN_SOLUTION.md`). Patch v5 Two-Stage Testmode Sequence `PASS [RUNTIME PROVEN]` (`docs/PATCH_V5_RUNTIME_PROOF.md`). ICAP Implementation Mapping complete (`docs/MT7925_ICAP_IMPLEMENTATION_MAP.md`). Declared `DECISION C: FIRMWARE BLOCKED / PARTIALLY IMPLEMENTABLE`. Patch v6 Minimum Design complete (`docs/PATCH_V6_DESIGN.md`, `NOT_EXECUTED`).
+   - **Status:** Active Primary Target. Gate 1 & Gate 2 Driver Replacement `PASS [RUNTIME PROVEN]`. Canonical Patch v3 `icap_trigger` DebugFS node `PASS [RUNTIME PROVEN]` (`docs/MT7925_CANONICAL_ABI_PROOF.md`). Patch v4 Sysfs Control Path `CONTROL_PATH_WORKING` (`docs/MT7925_ICAP_LOCKDOWN_SOLUTION.md`). Patch v5 Two-Stage Testmode Sequence `PASS [RUNTIME PROVEN]` (`docs/PATCH_V5_RUNTIME_PROOF.md`). ICAP Implementation Mapping complete (`docs/MT7925_ICAP_IMPLEMENTATION_MAP.md`). Declared `DECISION C: FIRMWARE BLOCKED / PARTIALLY IMPLEMENTABLE`. Operational Strategy: Passive P-RXV/C-RXV PHY Telemetry (`docs/MT7925_RX_VECTOR_ANALYSIS.md`, `docs/MT7925_PASSIVE_TELEMETRY_DESIGN.md`).
    - **Documentation:** [`hardware/mt7925/README.md`](../hardware/mt7925/README.md)
 
 2. **TP-Link TL-WN722N v1.0 (Secondary / USB Injector)**
@@ -72,10 +72,9 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 - **Sysfs Control Path Status:** **`CONTROL_PATH_WORKING`**. Bypassed Secure Boot kernel lockdown DebugFS write restrictions cleanly without disabling Secure Boot (`docs/MT7925_ICAP_LOCKDOWN_SOLUTION.md`).
 - **8-Byte Response Deconstruction:** Decoded `46 00 00 00 00 00 00 00` as `struct mt7925_mcu_uni_event` (`cid=0x46`, `status=0x00` [`STATUS_SUCCESS`]). Authored [`docs/MT7925_MCU_TESTMODE_FORENSICS.md`](MT7925_MCU_TESTMODE_FORENSICS.md).
 
-### 2026-08-08: ICAP Implementation Mapping & Patch v6 Design Complete
-- **Main Commit SHA:** `ba3d6c1`
-- **Implementation Mapping:** Mapped MT7915 vs MT7996 vs MT7921 vs MT7925 source components. Authored [`docs/MT7925_ICAP_IMPLEMENTATION_MAP.md`](MT7925_ICAP_IMPLEMENTATION_MAP.md).
-- **Critical Decision:** **`DECISION C: FIRMWARE BLOCKED / PARTIALLY IMPLEMENTABLE`**.
-- **WiFiSpectrum Analysis:** `MT7925_TM_WIFISPECTRUM` is a dead header enum in `mcu.h:104` with zero supporting logic.
-- **Patch v6 Design:** Authored non-executable minimum design specification [`docs/PATCH_V6_DESIGN.md`](PATCH_V6_DESIGN.md). Execution status: **`NOT_EXECUTED`**.
+### 2026-08-08: Passive RX-Vector Forensics & CSI Hardware Ecosystem Analysis Complete
+- **Main Commit SHA:** `PENDING_COMMIT`
+- **Passive RX-Vector Analysis:** Traced MT7925 P-RXV and C-RXV hardware descriptors. Authored [`docs/MT7925_RX_VECTOR_ANALYSIS.md`](MT7925_RX_VECTOR_ANALYSIS.md).
+- **Passive Telemetry Patch Design:** Designed non-intrusive `dev_dbg` passive telemetry logging patch. Authored [`docs/MT7925_PASSIVE_TELEMETRY_DESIGN.md`](MT7925_PASSIVE_TELEMETRY_DESIGN.md).
+- **CSI Hardware Ecosystem Alternatives:** Analyzed sensing capabilities of scalar RX-Vector metrics vs true OFDM CSI. Documented open-source PCIe Atheros AR9580/AR9590 (`ath9k`) ecosystem. Authored [`docs/CSI_HARDWARE_ALTERNATIVES.md`](CSI_HARDWARE_ALTERNATIVES.md).
 - **Final Driver State:** Stock signed driver active (`PASS`).

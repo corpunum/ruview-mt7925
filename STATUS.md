@@ -2,11 +2,11 @@
 
 ## Summary Declaration
 
-**PATCH V5 TWO-STAGE TESTMODE SEQUENCE IS RUNTIME PROVEN (`STATUS_ONLY` / `CSI_NOT_PROVEN`) ON AUGUST 8, 2026 (`docs/PATCH_V5_RUNTIME_PROOF.md`).**
+**PASSIVE RX-VECTOR TELEMETRY TARGET ADOPTED FOR MT7925 ON AUGUST 8, 2026 (`docs/MT7925_RX_VECTOR_ANALYSIS.md`).**
 
-**SOURCE IMPLEMENTATION MAP COMPLETE (`docs/MT7925_ICAP_IMPLEMENTATION_MAP.md`):** Deeply traced MediaTek mt76 reference sources (`mt7915`, `mt7996`, `mt7921`, `mt7925`). Formally declared **`DECISION C: FIRMWARE BLOCKED / PARTIALLY IMPLEMENTABLE`**.
+**PASSIVE TELEMETRY DESIGN COMPLETE (`docs/MT7925_PASSIVE_TELEMETRY_DESIGN.md`):** Authored non-intrusive passive telemetry patch design to log per-packet P-RXV/C-RXV channel metrics (`RCPI0-3`, `TxBF`, `MCS`, `BW`, `BSS_COLOR`) without MCU testmode switches or firmware modifications.
 
-**PATCH V6 MINIMUM DESIGN SPECIFICATION COMPLETE (`docs/PATCH_V6_DESIGN.md`):** Authored non-executable minimum design specification for passive RX-Vector channel metric extraction. Execution status: **`NOT_EXECUTED`** (Prohibited per user directive).
+**CSI HARDWARE ECOSYSTEM ANALYSIS COMPLETE (`docs/CSI_HARDWARE_ALTERNATIVES.md`):** Evaluated sensing capabilities of scalar RX-Vector metrics vs raw OFDM CSI. Documented open-source PCIe Atheros AR9580/AR9590 (`ath9k`) ecosystem for subcarrier CSI requirements.
 
 **POST-TEST ROLLBACK COMPLETE:** Controlled rollback restored stock in-tree signed driver stack (`/lib/modules/.../mt7925e.ko.zst`) in <1 second. Primary SSH route on `eno1` remained 100% active throughout.
 
@@ -43,10 +43,10 @@
 
 ## Declaration
 
-Patch v5 Two-Stage Testmode Sequence is **`PASS [RUNTIME PROVEN]`**.
+MT7925 Sensing Strategy: **`PASSIVE RX-VECTOR TELEMETRY`**.
 
 Implementation Mapping: **`DECISION C: FIRMWARE BLOCKED / PARTIALLY IMPLEMENTABLE`**.
 
-Patch v6 Status: **`DESIGN COMPLETE (NOT EXECUTED)`**.
+Hardware Ecosystem Strategy: **`PCIe Atheros Target for Raw Subcarrier CSI`**.
 
 Final driver state: Stock signed driver `mt7925e.ko.zst` active.
