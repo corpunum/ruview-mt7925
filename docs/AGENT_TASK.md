@@ -59,7 +59,7 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 - **Gate 2 Execution Status:** **PASS `[RUNTIME PROVEN]`** ([`docs/GATE2_RESULTS.md`](GATE2_RESULTS.md)).
 
 ### 2026-08-07: Patch v3 Build & Symbol Provenance Analysis Complete
-- **Main Commit SHA:** `PENDING_COMMIT`
+- **Main Commit SHA:** `9015f68`
 - **Source Instrumentation:** Patch v3 applied to `mt7925/debugfs.c` (`mt7925_icap_trigger_set`, `fops_icap_trigger`).
 - **Static Binary Proof:** Symbol `icap_trigger` verified inside `debugfs.o` and `mt7925-common.ko` via `strings` (`PASS [STATICALLY VERIFIED]`).
 - **MOK Signature:** Signed via enrolled MOK key (`CN=corpunumRig Secure Boot Module Signature key`).
