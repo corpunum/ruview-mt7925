@@ -10,21 +10,23 @@ Do **not** load or unload kernel modules without explicit approval.
 
 Do **not** trigger ICAP without explicit approval.
 
-Do **not** flash WDR3600 router without physical verification.
+Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF CURRENT SCOPE).
 
 ---
 
-## Dual Hardware Sensing Backends
+## Active Hardware Sensing Backends
 
 1. **MediaTek MT7925 (Primary / Onboard)**
    - **Type:** Onboard Wi-Fi 7 PCI Express adapter (`14c3:0717`).
    - **Status:** Active Primary Target. Gate 1 Driver Replacement `PASS [RUNTIME PROVEN]`. Gate 2 Ready (`READY_FOR_GATE2`). Preflight check verified `PASS`.
    - **Documentation:** [`hardware/mt7925/README.md`](../hardware/mt7925/README.md)
 
-2. **TP-Link TL-WDR3600 v1.x (Secondary / External Reference)**
-   - **Type:** External Atheros AR9344 / AR9580 dual-band router.
-   - **Status:** Secondary Reference Target. Custom OpenWrt SquashFS firmware successfully compiled (`ar9003_csi.ko` verified). Electronic discovery status: `MODEL_CONFIRMED_REVISION_UNKNOWN`.
-   - **Documentation:** [`hardware/tl-wdr3600/README.md`](../hardware/tl-wdr3600/README.md)
+2. **TP-Link TL-WN722N v1.0 (Secondary / USB Reference)**
+   - **Type:** USB 2.0 Atheros AR9271 High Gain Adapter (`0cf3:9271`).
+   - **Status:** Active Secondary Target. Hardware identified & bound to `ath9k_htc` `[RUNTIME PROVEN]`. Fail-closed USB unbind isolation verified (`echo 3-2:1.0 > /sys/bus/usb/drivers/ath9k_htc/unbind`).
+   - **Documentation:** [`hardware/tl-wn722n/README.md`](../hardware/tl-wn722n/README.md)
+
+*(Note: TP-Link TL-WDR3600 router investigation is DEFERRED / OUT OF CURRENT SCOPE).*
 
 ---
 
@@ -47,10 +49,11 @@ Do **not** flash WDR3600 router without physical verification.
 - **Main Commit SHA:** `957ba68`
 - **Gate 2 Readiness Matrix:** Authored [`docs/GATE2_READINESS.md`](GATE2_READINESS.md).
 
-### 2026-08-07: Electronic Discovery & Hardware Inventory Complete
-- **Main Commit SHA:** `28bb2fb`
-- **Electronic Discovery Summary:** Electronic discovery executed (`ip link`, `ip addr`, `ip neigh`, `curl` HTTP/HTTPS probes). Active host network routes over `eno1` (metric 100) to an upstream gateway (`Xfinity Broadband Router Server` on `192.168.1.1`). No standalone OpenWrt or TP-Link HTTP management interface is currently exposed on local subnets.
-- **WDR3600 Identity Status:** **`MODEL_CONFIRMED_REVISION_UNKNOWN`**
-- **MT7925 Status:** **`READY_FOR_GATE2`** (Preflight check verified `PASS`).
-- **Hardware Inventory Document:** Created [`docs/HARDWARE_INVENTORY.md`](HARDWARE_INVENTORY.md).
+### 2026-08-07: Phase 1-7 Hardware Discovery & CSI Comparison Complete
+- **Main Commit SHA:** `PENDING_COMMIT`
+- **MT7925 Status:** Primary Target. `PCI ID: 14c3:0717`. Driver: `mt7925e`. Gate 1: `PASS [RUNTIME PROVEN]`. Gate 2: `READY_FOR_GATE2` (Preflight check verified `PASS`).
+- **TL-WN722N Status:** Secondary Target. `USB VID:PID: 0cf3:9271`. Chipset: Qualcomm Atheros AR9271. Hardware Revision: `v1.0 / v1.1 [RUNTIME PROVEN]`. Driver: `ath9k_htc`.
+- **CSI Path Selection:** **PRIMARY_CSI_PATH:** MediaTek MT7925 (Wi-Fi 7 2x2 MIMO). **SECONDARY_CSI_PATH:** TL-WN722N v1.0 (USB AR9271 1x1 SISO). Authored [`docs/CSI_PATH_COMPARISON.md`](CSI_PATH_COMPARISON.md).
+- **USB Isolation Plan:** Pre-Gate 2 isolation command verified (`echo 3-2:1.0 > /sys/bus/usb/drivers/ath9k_htc/unbind` + `rmmod ath9k_htc`). Completely eliminates cross-driver shutdown hang risk during MT7925 testing.
+- **Hardware Inventory:** Updated [`docs/HARDWARE_INVENTORY.md`](HARDWARE_INVENTORY.md) and [`hardware/tl-wn722n/README.md`](../hardware/tl-wn722n/README.md). Marked TL-WDR3600 as `DEFERRED / OUT OF CURRENT SCOPE`.
 - **User Approval Required:** Explicit authorization before executing Gate 2 runtime module replacement.

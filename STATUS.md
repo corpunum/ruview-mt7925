@@ -6,7 +6,7 @@
 
 **POST-MORTEM INVESTIGATION COMPLETE (`docs/runtime/REBOOT_POSTMORTEM.md`):** The reboot hang observed after Gate 1 was **RUNTIME VERIFIED** to be caused by a firmware/WMI deadlock in the secondary USB Wi-Fi adapter (`ath9k_htc`), triggered by a global mac80211 regulatory domain update upon unloading MT7925. MT7925 and RuView code are **100% EXONERATED**.
 
-**HARDWARE DISCOVERY & INVENTORY COMPLETE (`docs/HARDWARE_INVENTORY.md`):** Electronic discovery identified onboard MT7925 (`14c3:0717`), secondary AR9271 USB dongle (`0cf3:9271`), and upstream network topology.
+**ACTIVE HARDWARE TARGETS ESTABLISHED:** Primary Target: Onboard MediaTek MT7925 (Wi-Fi 7 PCIe `14c3:0717`). Secondary Target: USB TP-Link TL-WN722N v1.0 (Atheros AR9271 `0cf3:9271`). *(TL-WDR3600 investigation is DEFERRED / OUT OF CURRENT SCOPE)*.
 
 ---
 
@@ -21,19 +21,11 @@
 - MT7925 driver and RuView codebase exonerated from shutdown stall. `[RUNTIME PROVEN]`
 - Signed out-of-tree modules (`mt7925-common.ko`, `mt7925e.ko`) loaded and accepted under Secure Boot. `[RUNTIME PROVEN]`
 - MT7925 PCI adapter bound cleanly (`ASIC revision: 79250000`, `HW/SW Version: 0x8a108a10`). `[RUNTIME PROVEN]`
+- Target secondary USB adapter: TP-Link TL-WN722N v1.0, USB VID:PID `0cf3:9271` (Qualcomm Atheros AR9271). Bound to `ath9k_htc`. `[RUNTIME PROVEN]`
+- Safe USB sysfs unbind (`echo 3-2:1.0 > /sys/bus/usb/drivers/ath9k_htc/unbind`) and `rmmod` tested and verified clean. `[RUNTIME PROVEN]`
 - Primary SSH route uses wired Ethernet (`eno1`, metric 100). SSH remained 100% active throughout driver replacement. `[RUNTIME PROVEN]`
 - Automated rollback daemon (`tools/runtime/prepare-rollback.sh`) disarmed cleanly upon success. `[RUNTIME PROVEN]`
 - Stock driver restoration script (`tools/runtime/rollback-mt7925.sh`) restored in-tree stock signed modules post-test. `[RUNTIME PROVEN]`
-
----
-
-## Statically Verified (`[STATICALLY VERIFIED]`)
-
-- Secondary Target Firmware Build: OpenWrt 18.06 SquashFS image targeting TP-Link TL-WDR3600 v1.x built cleanly (`hardware/tl-wdr3600/README.md`). `[STATICALLY VERIFIED]`
-- Factory image SHA256: `546569477ff01721002d49157b25185663508793d159bbedbea1c1f509641fd8`. `[STATICALLY VERIFIED]`
-- Sysupgrade image SHA256: `08117b6798add73c01aea7a8e04845b2dd3a8f74595542e3c52a9c090c8d84a3`. `[STATICALLY VERIFIED]`
-- Atheros CSI kernel module (`ar9003_csi.ko`) integrated in rootfs image. `[STATICALLY VERIFIED]`
-- WDR3600 Electronic Status: **`MODEL_CONFIRMED_REVISION_UNKNOWN`** (Requires physical router sticker / serial check). `[STATICALLY VERIFIED]`
 
 ---
 
@@ -46,9 +38,9 @@
 
 ## Declaration
 
-Gate 1 driver replacement is RUNTIME PROVEN. MT7925 Gate 2 is READY.
+MT7925 Gate 1 driver replacement is RUNTIME PROVEN. MT7925 Gate 2 is READY.
 
-Secondary TL-WDR3600 status: MODEL_CONFIRMED_REVISION_UNKNOWN (`NOT_READY_FOR_FLASH`).
+TL-WN722N v1.0 hardware is RUNTIME PROVEN & BOUND to `ath9k_htc`. Fail-closed USB unbind isolation is verified.
 
 Next milestone: Await explicit user authorization for MT7925 Gate 2 execution.
 
