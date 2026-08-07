@@ -4,7 +4,7 @@
 
 **PATCH V5 TWO-STAGE TESTMODE SEQUENCE IS RUNTIME PROVEN (`STATUS_ONLY` / `CSI_NOT_PROVEN`) ON AUGUST 8, 2026 (`docs/PATCH_V5_RUNTIME_PROOF.md`).**
 
-**PATCH V5 TWO-STAGE TESTMODE EXECUTION COMPLETE (`docs/PATCH_V5_RUNTIME_PROOF.md`):** Executed authorized Patch v5 sequence (`Power Lock` -> `SWITCH_MODE_RF_TEST` -> `SWITCH_MODE_ICAP` -> `TESTMODE_RX_STAT Query`). All 4 MCU stages executed cleanly without errors. `MCU_UNI_QUERY(TESTMODE_RX_STAT)` returned an 8-byte status response header (`32 00 00 00 bb 00 00 c0`). Zero subcarrier channel matrices or I/Q sample arrays were returned (**`STATUS_ONLY` / `CSI_NOT_PROVEN`**).
+**STATE MACHINE FORENSICS COMPLETE (`docs/MT7925_ICAP_STATE_MACHINE.md`):** Deconstructed the 8-byte status response header (`32 00 00 00 bb 00 00 c0`) and active-RF `-110` (`-ETIMEDOUT`) MCU queue timeout. Proved that synchronous RPC query returns status headers while raw capture matrices require a multi-stage ATE state machine + DMA ring consumer. Patch v6 runtime experimentation is currently **`NOT JUSTIFIED`**.
 
 **REPRODUCIBLE BUILD AUTOMATION COMPLETE (`tools/build-canonical-patch-v5.sh`):** Created and verified 100% reproducible build script `tools/build-canonical-patch-v5.sh` compiled directly against Launchpad Canonical source (`Ubuntu-hwe-7.0-7.0.0-28.28~24.04.1`).
 
@@ -22,6 +22,7 @@
 - Reproducible Build Automation: `tools/build-canonical-patch-v5.sh` verified functional and clean. `[RUNTIME PROVEN]`
 - Symbol CRC Alignment: 100% match on all exported symbols (`mt792x_get_txpower` CRC `0x310f36d2`). `[RUNTIME PROVEN]`
 - Patch v5 Execution: All 4 MCU sequence stages executed cleanly. `MCU_UNI_QUERY(TESTMODE_RX_STAT)` returned 8-byte status header (`32 00 00 00 bb 00 00 c0`). Result classified: `STATUS_ONLY` / `CSI_NOT_PROVEN`. `[RUNTIME PROVEN]`
+- Active-RF -110 Timeout Analysis: Inbound RF frames in ICAP mode without an allocated DMA capture ring cause synchronous RPC queries to time out after 3000ms. Driver cleanly executed `mt792x_reset()` and recovered MCU state in <100ms. `[RUNTIME PROVEN]`
 - Signed out-of-tree modules (`mt7925-common.ko`, `mt7925e.ko`) loaded and accepted under Secure Boot with ZERO symbol errors. `[RUNTIME PROVEN]`
 - MT7925 PCI adapter bound cleanly (`ASIC revision: 79250000`, `HW/SW Version: 0x8a108a10`). `[RUNTIME PROVEN]`
 - Target secondary USB adapter: TP-Link TL-WN722N v1.0, USB VID:PID `0cf3:9271` (Qualcomm Atheros AR9271). Bound to `ath9k_htc`. `[RUNTIME PROVEN]`
@@ -44,6 +45,8 @@
 
 Patch v5 Two-Stage Testmode Sequence is **`PASS [RUNTIME PROVEN]`**.
 
-Final Verdict: **`STATUS_ONLY` / `CSI_NOT_PROVEN`**.
+State Machine Forensics: **`COMPLETE`** (`docs/MT7925_ICAP_STATE_MACHINE.md`).
+
+Patch v6 Execution: **`NOT JUSTIFIED`**.
 
 Final driver state: Stock signed driver `mt7925e.ko.zst` active.
