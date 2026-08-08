@@ -72,9 +72,10 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 - **Sysfs Control Path Status:** **`CONTROL_PATH_WORKING`**. Bypassed Secure Boot kernel lockdown DebugFS write restrictions cleanly without disabling Secure Boot (`docs/MT7925_ICAP_LOCKDOWN_SOLUTION.md`).
 - **8-Byte Response Deconstruction:** Decoded `46 00 00 00 00 00 00 00` as `struct mt7925_mcu_uni_event` (`cid=0x46`, `status=0x00` [`STATUS_SUCCESS`]). Authored [`docs/MT7925_MCU_TESTMODE_FORENSICS.md`](MT7925_MCU_TESTMODE_FORENSICS.md).
 
-### 2026-08-08: Passive LAN Inventory, Router Assessment & Capability Mapping Complete
-- **Main Commit SHA:** `ac6c060`
-- **Passive LAN Inventory:** Discovered 17 active devices across `192.168.50.0/24` using ARP, ICMP sweep, and conservative port probing. Identified ASUS RT-AX86U Pro router, 4x TP-Link Tapo Security Cameras, Sensibo Sky AC Controller, Gree & Midea HVAC units, Google Chromecast, Amazon Echo, and smart mobile clients.
-- **Router Assessment:** ASUS RT-AX86U Pro (`192.168.50.1`). SSH is currently disabled. Documented required read-only SSH key / admin API access requirement.
-- **Capability Mapping & Sensor Fusion Design:** Authored [`docs/RUVIEW_HOUSEHOLD_INTEGRATION_ARCH.md`](RUVIEW_HOUSEHOLD_INTEGRATION_ARCH.md) classifying device signals into Directly Measured, Derived with Good Confidence, Experimental, and Not Possible. Defined Bayesian sensor fusion architecture combining MT7925 RF movement + Sensibo HVAC state + Wi-Fi ARP presence + Tapo optical motion.
-- **Rules & Constraints Enforced:** Zero brute-forcing, zero firmware modifications, zero configuration changes, zero credential guessing. Stopped and awaiting user approval before implementing integrations.
+### 2026-08-08: ASUS Router Read-Only Sensor Fusion Integration Complete
+- **Main Commit SHA:** `dec7244`
+- **Router Forensics & Verification:** Connected to ASUS RT-AX86U Pro (`192.168.50.1:1024`) via read-only SSH. Identified Linux 4.19.183 aarch64 kernel, stock ASUSWRT firmware `3.0.0.6_102`, 2.4 GHz radio (`eth6`), and 5 GHz radio (`eth7`).
+- **Read-Only Telemetry Collector:** Created [`tools/router-collector.py`](file:///home/corpunum/projects/ruview-mt7925/tools/router-collector.py) polling `wl -i eth6/7 assoclist`, `wl sta_info`, and `/var/lib/misc/dnsmasq.leases` every 5 seconds.
+- **Sensor Fusion Engine:** Integrated `AsusRouterCollector` into [`tools/ruview-mt7925-bridge.py`](file:///home/corpunum/projects/ruview-mt7925/tools/ruview-mt7925-bridge.py). Fuses MT7925 movement score + active mobile Wi-Fi clients into explainable household states (`OCCUPIED_MOVING`, `OCCUPIED_STILL`, `DEVICE_PRESENT_QUIET`, `EMPTY`).
+- **Live UI Panels:** Updated [`ui/components/SensingTab.js`](file:///home/corpunum/ruview-upstream/ui/components/SensingTab.js) to render live ASUS Router telemetry, connected client count, fused state, and real-time station RSSI/rate metrics.
+- **Zero Config Alteration Verified:** Zero `nvram set` writes, zero firewall changes, zero service restarts, zero network disruption. Authored [`docs/ASUS_ROUTER_INTEGRATION.md`](ASUS_ROUTER_INTEGRATION.md).
