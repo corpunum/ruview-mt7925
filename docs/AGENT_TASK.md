@@ -72,11 +72,9 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 - **Sysfs Control Path Status:** **`CONTROL_PATH_WORKING`**. Bypassed Secure Boot kernel lockdown DebugFS write restrictions cleanly without disabling Secure Boot (`docs/MT7925_ICAP_LOCKDOWN_SOLUTION.md`).
 - **8-Byte Response Deconstruction:** Decoded `46 00 00 00 00 00 00 00` as `struct mt7925_mcu_uni_event` (`cid=0x46`, `status=0x00` [`STATUS_SUCCESS`]). Authored [`docs/MT7925_MCU_TESTMODE_FORENSICS.md`](MT7925_MCU_TESTMODE_FORENSICS.md).
 
-### 2026-08-08: RuView Household Live Sensing Platform Built & Operational
-- **Main Commit SHA:** `bdf3004`
-- **RuView Repository Cloned & Analyzed:** Cloned `ruvnet/RuView` (`v2146`) to `/home/corpunum/ruview-upstream`. Formally mapped expected CSI JSON schema to MT7925 P-RXV/C-RXV telemetry features (`docs/RUVIEW_INTEGRATION_MAP.md`).
-- **Bridge & Illuminator Created:** Created `tools/ruview-mt7925-bridge.py` and `tools/rf-illuminator.sh`.
-- **Live Startup & Shutdown Scripts:** Created `start-ruview-sensing.sh` and `stop-ruview-sensing.sh`.
-- **Port Conflict Resolution & Network Binding:** Configured HTTP web UI on non-conflicting port `3080` and WebSocket bridge on port `3081`. Explicitly bound to `0.0.0.0` to enable access over both Localhost, LAN (`192.168.50.251`), and Tailscale (`100.76.5.104`).
-- **HTTP Status Endpoint Integration:** Embedded HTTP status handler (`process_request` in `tools/ruview-mt7925-bridge.py`) serving `/api/v1/status` and `/health/live` returning `{"status": "ok", "source": "live"}` on port `3081`. Resolved `BackendDetector` health check timeout and banner warnings.
-- **Live Web Interface:** RuView UI live at `http://100.76.5.104:3080/index.html` (Tailscale) and `http://192.168.50.251:3080/index.html` (LAN), displaying green **LIVE — ESP32 HARDWARE** banner receiving live stream on `ws://100.76.5.104:3081/ws/sensing`.
+### 2026-08-08: Passive LAN Inventory, Router Assessment & Capability Mapping Complete
+- **Main Commit SHA:** `PENDING_COMMIT`
+- **Passive LAN Inventory:** Discovered 17 active devices across `192.168.50.0/24` using ARP, ICMP sweep, and conservative port probing. Identified ASUS RT-AX86U Pro router, 4x TP-Link Tapo Security Cameras, Sensibo Sky AC Controller, Gree & Midea HVAC units, Google Chromecast, Amazon Echo, and smart mobile clients.
+- **Router Assessment:** ASUS RT-AX86U Pro (`192.168.50.1`). SSH is currently disabled. Documented required read-only SSH key / admin API access requirement.
+- **Capability Mapping & Sensor Fusion Design:** Authored [`docs/RUVIEW_HOUSEHOLD_INTEGRATION_ARCH.md`](RUVIEW_HOUSEHOLD_INTEGRATION_ARCH.md) classifying device signals into Directly Measured, Derived with Good Confidence, Experimental, and Not Possible. Defined Bayesian sensor fusion architecture combining MT7925 RF movement + Sensibo HVAC state + Wi-Fi ARP presence + Tapo optical motion.
+- **Rules & Constraints Enforced:** Zero brute-forcing, zero firmware modifications, zero configuration changes, zero credential guessing. Stopped and awaiting user approval before implementing integrations.

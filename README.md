@@ -59,6 +59,7 @@ RuView formally tracks two complementary hardware sensing backends:
 
 - [Project Status](STATUS.md)
 - [Agent Task & Execution Log](docs/AGENT_TASK.md)
+- [RuView Household Integration Architecture](docs/RUVIEW_HOUSEHOLD_INTEGRATION_ARCH.md)
 - [MT7925 Spatial Sensing Evaluation](docs/MT7925_SPATIAL_SENSING_EVALUATION.md)
 - [MT7925 Passive Sensing Proof](docs/MT7925_PASSIVE_SENSING_PROOF.md)
 - [MT7925 High-Rate Profiling Proof](docs/MT7925_HIGHRATE_PROFILING_PROOF.md)
