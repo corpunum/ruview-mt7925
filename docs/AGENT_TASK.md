@@ -73,7 +73,7 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 - **8-Byte Response Deconstruction:** Decoded `46 00 00 00 00 00 00 00` as `struct mt7925_mcu_uni_event` (`cid=0x46`, `status=0x00` [`STATUS_SUCCESS`]). Authored [`docs/MT7925_MCU_TESTMODE_FORENSICS.md`](MT7925_MCU_TESTMODE_FORENSICS.md).
 
 ### 2026-08-08: RuView Household Live Sensing Platform Built & Operational
-- **Main Commit SHA:** `PENDING_COMMIT`
+- **Main Commit SHA:** `bdf3004`
 - **RuView Repository Cloned & Analyzed:** Cloned `ruvnet/RuView` (`v2146`) to `/home/corpunum/ruview-upstream`. Formally mapped expected CSI JSON schema to MT7925 P-RXV/C-RXV telemetry features (`docs/RUVIEW_INTEGRATION_MAP.md`).
 - **Bridge & Illuminator Created:** Created `tools/ruview-mt7925-bridge.py` and `tools/rf-illuminator.sh`.
 - **Live Startup & Shutdown Scripts:** Created `start-ruview-sensing.sh` and `stop-ruview-sensing.sh`.
