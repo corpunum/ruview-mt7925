@@ -73,7 +73,7 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 - **8-Byte Response Deconstruction:** Decoded `46 00 00 00 00 00 00 00` as `struct mt7925_mcu_uni_event` (`cid=0x46`, `status=0x00` [`STATUS_SUCCESS`]). Authored [`docs/MT7925_MCU_TESTMODE_FORENSICS.md`](MT7925_MCU_TESTMODE_FORENSICS.md).
 
 ### 2026-08-08: Passive LAN Inventory, Router Assessment & Capability Mapping Complete
-- **Main Commit SHA:** `PENDING_COMMIT`
+- **Main Commit SHA:** `ac6c060`
 - **Passive LAN Inventory:** Discovered 17 active devices across `192.168.50.0/24` using ARP, ICMP sweep, and conservative port probing. Identified ASUS RT-AX86U Pro router, 4x TP-Link Tapo Security Cameras, Sensibo Sky AC Controller, Gree & Midea HVAC units, Google Chromecast, Amazon Echo, and smart mobile clients.
 - **Router Assessment:** ASUS RT-AX86U Pro (`192.168.50.1`). SSH is currently disabled. Documented required read-only SSH key / admin API access requirement.
 - **Capability Mapping & Sensor Fusion Design:** Authored [`docs/RUVIEW_HOUSEHOLD_INTEGRATION_ARCH.md`](RUVIEW_HOUSEHOLD_INTEGRATION_ARCH.md) classifying device signals into Directly Measured, Derived with Good Confidence, Experimental, and Not Possible. Defined Bayesian sensor fusion architecture combining MT7925 RF movement + Sensibo HVAC state + Wi-Fi ARP presence + Tapo optical motion.
