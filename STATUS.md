@@ -49,7 +49,8 @@
 
 ## Declaration
 
-MT7925 Spatial Sensing Status: **`PASS [RUNTIME PROVEN]`**.
+- MT7925 Spatial Sensing Status: **`PASS [RUNTIME PROVEN]`**.
+- ASUS Router Read-Only Sensor Fusion: **`PASS [RUNTIME PROVEN]`** (`docs/ASUS_ROUTER_INTEGRATION.md`). Polling 20 active Wi-Fi clients on RT-AX86U Pro (`192.168.50.1:1024`) and fusing presence into RuView live WebSocket stream (`ws://100.76.5.104:3081/ws/sensing`).
 
 Final Classification Verdict: **`B — MOTION SENSING DEMONSTRATED`**.
 

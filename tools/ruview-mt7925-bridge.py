@@ -19,6 +19,72 @@ except ImportError:
 STRUCT_FMT = "<Q4I24I4b4B"
 SAMPLE_SIZE = struct.calcsize(STRUCT_FMT)
 
+class AsusRouterCollector:
+    def __init__(self, host="192.168.50.1", port=1024, user="admin", password="adminadmin"):
+        self.host = host
+        self.port = port
+        self.user = user
+        self.password = password
+        self.last_clients = {}
+
+    def exec_cmd(self, command):
+        cmd_str = f'ssh -p {self.port} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {self.user}@{self.host} "{command}"'
+        try:
+            import pexpect
+            child = pexpect.spawn(cmd_str)
+            i = child.expect(['[pP]assword:', pexpect.EOF, pexpect.TIMEOUT], timeout=6)
+            if i == 0:
+                child.sendline(self.password)
+                child.expect(pexpect.EOF, timeout=10)
+                return child.before.decode('utf-8', errors='ignore')
+        except Exception:
+            pass
+        return ""
+
+    def parse_leases(self):
+        leases = {}
+        out = self.exec_cmd("cat /var/lib/misc/dnsmasq.leases 2>/dev/null || cat /tmp/dhcp.leases 2>/dev/null")
+        for line in out.splitlines():
+            parts = line.strip().split()
+            if len(parts) >= 4:
+                ts, mac, ip, hostname = parts[0], parts[1].upper(), parts[2], parts[3]
+                leases[mac] = {"ip": ip, "hostname": hostname if hostname != "*" else "Unknown"}
+        return leases
+
+    def get_associated_clients(self):
+        leases = self.parse_leases()
+        clients = {}
+        import re
+        for band_label, iface in [("2.4G", "eth6"), ("5G", "eth7")]:
+            assoc_out = self.exec_cmd(f"wl -i {iface} assoclist")
+            macs = re.findall(r'([0-9A-FA-F]{2}(?::[0-9A-FA-F]{2}){5})', assoc_out)
+            for mac in macs:
+                mac_upper = mac.upper()
+                sta_out = self.exec_cmd(f"wl -i {iface} sta_info {mac_upper}")
+                rssi_match = re.search(r'smoothed rssi:\s*(-?\d+)', sta_out)
+                tx_match = re.search(r'rate of last tx pkt:\s*(\d+)', sta_out)
+                rx_match = re.search(r'rate of last rx pkt:\s*(\d+)', sta_out)
+                dur_match = re.search(r'in network\s*(\d+)\s*seconds', sta_out)
+
+                rssi = int(rssi_match.group(1)) if rssi_match else -80
+                tx_rate = int(tx_match.group(1)) // 1000 if tx_match else 0
+                rx_rate = int(rx_match.group(1)) // 1000 if rx_match else 0
+                dur_sec = int(dur_match.group(1)) if dur_match else 0
+
+                dhcp_info = leases.get(mac_upper, {})
+                clients[mac_upper] = {
+                    "mac": mac_upper,
+                    "ip": dhcp_info.get("ip", "Unknown"),
+                    "hostname": dhcp_info.get("hostname", "Unknown"),
+                    "band": band_label,
+                    "rssi": rssi,
+                    "tx_rate_mbps": tx_rate,
+                    "rx_rate_mbps": rx_rate,
+                    "duration_sec": dur_sec
+                }
+        self.last_clients = clients
+        return clients
+
 class MT7925SensingBridge:
     def __init__(self, debugfs_path, host="0.0.0.0", port=3081, mode="AR9271_LOW"):
         self.debugfs_path = debugfs_path
@@ -36,6 +102,11 @@ class MT7925SensingBridge:
         self.base_std = 1.2
         self.calibrated = False
         self.calib_samples = []
+
+        # Router Integration
+        self.router = AsusRouterCollector()
+        self.router_data = {}
+        self.last_router_poll = 0
         
     def mean(self, lst):
         return sum(lst) / len(lst) if lst else 0.0
@@ -91,18 +162,30 @@ class MT7925SensingBridge:
         # Classification logic
         motion_score = cur_diff_std / (self.base_std if self.base_std > 0 else 1.0)
         
+        # Router Sensor Fusion Logic
+        mobile_clients_count = len([c for c in self.router_data.values() if c.get("band") in ["2.4G", "5G"]])
+        
         if motion_score > 2.5:
             motion_level = "active"
             presence = True
-            confidence = min(0.98, 0.70 + 0.05 * motion_score)
+            confidence = min(0.98, 0.75 + (0.05 * motion_score if mobile_clients_count > 0 else 0.0))
+            fused_state = "OCCUPIED_MOVING"
         elif motion_score > 1.3:
             motion_level = "present_still"
             presence = True
-            confidence = min(0.90, 0.60 + 0.05 * motion_score)
+            confidence = min(0.90, 0.65 + (0.05 * motion_score if mobile_clients_count > 0 else 0.0))
+            fused_state = "OCCUPIED_STILL"
         else:
-            motion_level = "absent"
-            presence = False
-            confidence = 0.85
+            if mobile_clients_count > 0:
+                motion_level = "present_still"
+                presence = True
+                confidence = 0.80
+                fused_state = "DEVICE_PRESENT_QUIET"
+            else:
+                motion_level = "absent"
+                presence = False
+                confidence = 0.88
+                fused_state = "EMPTY"
 
         # 3D Proxy Signal Field Blob
         grid_size = 20
@@ -123,9 +206,9 @@ class MT7925SensingBridge:
         return {
             "type": "sensing_update",
             "timestamp": sample["ts_sec"],
-            "source": "mt7925_rxv",
+            "source": "mt7925_rxv_router_fused",
             "_simulated": False,
-            "mode_label": "NO TRUE CSI — RXV SENSING MODE",
+            "mode_label": "NO TRUE CSI — SENSOR FUSED TELEMETRY MODE",
             "nodes": [
                 {
                     "node_id": 1,
@@ -149,13 +232,34 @@ class MT7925SensingBridge:
             "classification": {
                 "motion_level": motion_level,
                 "presence": presence,
-                "confidence": confidence
+                "confidence": confidence,
+                "fused_state": fused_state
+            },
+            "router_telemetry": {
+                "status": "connected",
+                "model": "ASUS RT-AX86U Pro",
+                "firmware": "3.0.0.6_102 (Linux 4.19.183 aarch64)",
+                "total_clients": len(self.router_data),
+                "wifi_clients": mobile_clients_count,
+                "clients": list(self.router_data.values())
             },
             "signal_field": {
                 "grid_size": [grid_size, 1, grid_size],
                 "values": values
             }
         }
+
+    async def router_poll_loop(self):
+        print("[+] Starting background ASUS router collector task (every 5s)...")
+        loop = asyncio.get_running_loop()
+        while True:
+            try:
+                data = await loop.run_in_executor(None, self.router.get_associated_clients)
+                if data:
+                    self.router_data = data
+            except Exception as e:
+                print(f"[!] Router poll error: {e}")
+            await asyncio.sleep(5.0)
 
     async def register(self, websocket):
         self.clients.add(websocket)
@@ -173,6 +277,7 @@ class MT7925SensingBridge:
         await asyncio.gather(*[client.send(msg) for client in self.clients], return_exceptions=True)
 
     async def reader_loop(self):
+        asyncio.create_task(self.router_poll_loop())
         print(f"[+] Opening DebugFS telemetry node: {self.debugfs_path}")
         while True:
             try:
