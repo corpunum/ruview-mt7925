@@ -73,7 +73,7 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 - **8-Byte Response Deconstruction:** Decoded `46 00 00 00 00 00 00 00` as `struct mt7925_mcu_uni_event` (`cid=0x46`, `status=0x00` [`STATUS_SUCCESS`]). Authored [`docs/MT7925_MCU_TESTMODE_FORENSICS.md`](MT7925_MCU_TESTMODE_FORENSICS.md).
 
 ### 2026-08-08: Authorized Spatial Sensing & Confounder Evaluation Complete
-- **Main Commit SHA:** `PENDING_COMMIT`
+- **Main Commit SHA:** `66170bc`
 - **Spatial Evaluation Results:** Binary Movement Accuracy = **59.6%** (F1: **0.75**, Precision: **1.00**, Recall: **0.60**). Spatial Left vs Right Separation Accuracy = **50.0%** (Exact chance baseline). Multiclass Spatial Accuracy = **20.0%** (Exact chance baseline).
 - **C-RXV Word 7 & 8 Identification:** Proved C-RXV Words 7 & 8 correlate 100% with `BSS_COLOR` and Doppler MAC/PHY frame control flags (frame-type metadata, NOT spatial CSI).
 - **Final Decision Gate Classification:** **`B — MOTION SENSING DEMONSTRATED`** (*Movement generalizes across unseen experimental cycles, but spatial position does not*). Authored [`docs/MT7925_SPATIAL_SENSING_EVALUATION.md`](MT7925_SPATIAL_SENSING_EVALUATION.md).
