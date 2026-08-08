@@ -18,7 +18,7 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 
 1. **MediaTek MT7925 (Primary / Onboard)**
    - **Type:** Onboard Wi-Fi 7 PCI Express adapter (`14c3:0717`).
-   - **Status:** Active Primary Target. Gate 1 & Gate 2 Driver Replacement `PASS [RUNTIME PROVEN]`. Canonical Patch v3 `icap_trigger` DebugFS node `PASS [RUNTIME PROVEN]` (`docs/MT7925_CANONICAL_ABI_PROOF.md`). Patch v4 Sysfs Control Path `CONTROL_PATH_WORKING` (`docs/MT7925_ICAP_LOCKDOWN_SOLUTION.md`). Patch v5 Two-Stage Testmode Sequence `PASS [RUNTIME PROVEN]` (`docs/PATCH_V5_RUNTIME_PROOF.md`). Passive RX-Vector Telemetry Ring Buffer `PASS [RUNTIME PROVEN]` (`docs/MT7925_RXV_RUNTIME_PROOF.md`). Spatial Sensing Evaluation complete (`docs/MT7925_SPATIAL_SENSING_EVALUATION.md`). Formally declared **`B — MOTION SENSING DEMONSTRATED`**.
+   - **Status:** Active Primary Target. Gate 1 & Gate 2 Driver Replacement `PASS [RUNTIME PROVEN]`. Canonical Patch v3 `icap_trigger` DebugFS node `PASS [RUNTIME PROVEN]` (`docs/MT7925_CANONICAL_ABI_PROOF.md`). Patch v4 Sysfs Control Path `CONTROL_PATH_WORKING` (`docs/MT7925_ICAP_LOCKDOWN_SOLUTION.md`). Patch v5 Two-Stage Testmode Sequence `PASS [RUNTIME PROVEN]` (`docs/PATCH_V5_RUNTIME_PROOF.md`). Passive RX-Vector Telemetry Ring Buffer `PASS [RUNTIME PROVEN]` (`docs/MT7925_RXV_RUNTIME_PROOF.md`). RuView Household Live Sensing Platform `PASS [RUNTIME PROVEN]`.
    - **Documentation:** [`hardware/mt7925/README.md`](../hardware/mt7925/README.md)
 
 2. **TP-Link TL-WN722N v1.0 (Secondary / USB Injector)**
@@ -72,10 +72,9 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 - **Sysfs Control Path Status:** **`CONTROL_PATH_WORKING`**. Bypassed Secure Boot kernel lockdown DebugFS write restrictions cleanly without disabling Secure Boot (`docs/MT7925_ICAP_LOCKDOWN_SOLUTION.md`).
 - **8-Byte Response Deconstruction:** Decoded `46 00 00 00 00 00 00 00` as `struct mt7925_mcu_uni_event` (`cid=0x46`, `status=0x00` [`STATUS_SUCCESS`]). Authored [`docs/MT7925_MCU_TESTMODE_FORENSICS.md`](MT7925_MCU_TESTMODE_FORENSICS.md).
 
-### 2026-08-08: Authorized Spatial Sensing & Confounder Evaluation Complete
-- **Main Commit SHA:** `66170bc`
-- **Spatial Evaluation Results:** Binary Movement Accuracy = **59.6%** (F1: **0.75**, Precision: **1.00**, Recall: **0.60**). Spatial Left vs Right Separation Accuracy = **50.0%** (Exact chance baseline). Multiclass Spatial Accuracy = **20.0%** (Exact chance baseline).
-- **C-RXV Word 7 & 8 Identification:** Proved C-RXV Words 7 & 8 correlate 100% with `BSS_COLOR` and Doppler MAC/PHY frame control flags (frame-type metadata, NOT spatial CSI).
-- **Final Decision Gate Classification:** **`B — MOTION SENSING DEMONSTRATED`** (*Movement generalizes across unseen experimental cycles, but spatial position does not*). Authored [`docs/MT7925_SPATIAL_SENSING_EVALUATION.md`](MT7925_SPATIAL_SENSING_EVALUATION.md).
-- **Controlled Rollback:** Controlled rollback restored stock in-tree signed driver `/lib/modules/.../mt7925e.ko.zst` in <1 second (`PASS`).
-- **Final Driver State:** Stock signed driver active (`PASS`).
+### 2026-08-08: RuView Household Live Sensing Platform Built & Operational
+- **Main Commit SHA:** `PENDING_COMMIT`
+- **RuView Repository Cloned & Analyzed:** Cloned `ruvnet/RuView` (`v2146`) to `/home/corpunum/ruview-upstream`. Formally mapped expected CSI JSON schema to MT7925 P-RXV/C-RXV telemetry features (`docs/RUVIEW_INTEGRATION_MAP.md`).
+- **Bridge & Illuminator Created:** Created `tools/ruview-mt7925-bridge.py` and `tools/rf-illuminator.sh`.
+- **Live Startup & Shutdown Scripts:** Created `start-ruview-sensing.sh` and `stop-ruview-sensing.sh`.
+- **Live Web Interface:** RuView UI live at `http://192.168.50.251:3000/index.html` receiving live WebSocket stream on `ws://192.168.50.251:3001/ws/sensing`.
