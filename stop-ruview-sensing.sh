@@ -8,7 +8,7 @@ echo "   STOPPING RUVIEW MT7925 HOUSEHOLD SENSING PLATFORM   "
 echo "=================================================="
 
 echo "[+] Terminating RuView UI HTTP server..."
-pkill -f "python3 -m http.server 3000" 2>/dev/null || true
+pkill -f "python3 -m http.server 3080" 2>/dev/null || true
 
 echo "[+] Terminating RuView WebSocket Bridge..."
 pkill -f "ruview-mt7925-bridge.py" 2>/dev/null || true

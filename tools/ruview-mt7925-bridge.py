@@ -20,7 +20,7 @@ STRUCT_FMT = "<Q4I24I4b4B"
 SAMPLE_SIZE = struct.calcsize(STRUCT_FMT)
 
 class MT7925SensingBridge:
-    def __init__(self, debugfs_path, host="0.0.0.0", port=3001, mode="AR9271_LOW"):
+    def __init__(self, debugfs_path, host="0.0.0.0", port=3081, mode="AR9271_LOW"):
         self.debugfs_path = debugfs_path
         self.host = host
         self.port = port
@@ -206,7 +206,7 @@ class MT7925SensingBridge:
 async def main():
     parser = argparse.ArgumentParser(description="RuView MT7925 RXV Telemetry Bridge")
     parser.add_argument("--node", required=True, help="DebugFS telemetry node path")
-    parser.add_argument("--port", type=int, default=3001, help="WebSocket server port")
+    parser.add_argument("--port", type=int, default=3081, help="WebSocket server port")
     parser.add_argument("--mode", default="AR9271_LOW", help="RF Illuminator Mode")
     args = parser.parse_args()
 

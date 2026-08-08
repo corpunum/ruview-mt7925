@@ -6,6 +6,9 @@ REPO_DIR="/home/corpunum/projects/ruview-mt7925"
 RUVIEW_UI_DIR="/home/corpunum/ruview-upstream/ui"
 ILLUMINATOR_MODE="${1:-AR9271_LOW}"
 
+HTTP_PORT=3080
+WS_PORT=3081
+
 echo "=================================================="
 echo "   STARTING RUVIEW MT7925 HOUSEHOLD SENSING PLATFORM   "
 echo "=================================================="
@@ -39,32 +42,36 @@ sudo iw dev "$MT7925_IF" set channel 6 HT20
 echo "=== STEP 3: STARTING AR9271 RF ILLUMINATOR ($ILLUMINATOR_MODE) ==="
 bash tools/rf-illuminator.sh "$ILLUMINATOR_MODE"
 
-echo "=== STEP 4: STARTING RUVIEW MT7925 WEBSOCKET BRIDGE (PRIVILEGED DEBUGFS ATTACHMENT) ==="
+echo "=== STEP 4: STARTING RUVIEW MT7925 WEBSOCKET BRIDGE (PORT $WS_PORT) ==="
 sudo pkill -f "ruview-mt7925-bridge.py" 2>/dev/null || true
-sudo python3 tools/ruview-mt7925-bridge.py --node "$DEBUGFS_NODE" --port 3001 --mode "$ILLUMINATOR_MODE" > /tmp/ruview_bridge.log 2>&1 &
+sudo python3 tools/ruview-mt7925-bridge.py --node "$DEBUGFS_NODE" --port "$WS_PORT" --mode "$ILLUMINATOR_MODE" > /tmp/ruview_bridge.log 2>&1 &
 BRIDGE_PID=$!
-echo "[+] Bridge started with PID $BRIDGE_PID"
+echo "[+] Bridge started on port $WS_PORT with PID $BRIDGE_PID"
 
-echo "=== STEP 5: LAUNCHING RUVIEW WEB FRONTEND ==="
-sudo pkill -f "python3 -m http.server 3000" 2>/dev/null || true
+echo "=== STEP 5: LAUNCHING RUVIEW WEB FRONTEND (PORT $HTTP_PORT) ==="
+sudo pkill -f "python3 -m http.server $HTTP_PORT" 2>/dev/null || true
 cd "$RUVIEW_UI_DIR"
-python3 -m http.server 3000 > /tmp/ruview_ui.log 2>&1 &
+python3 -m http.server "$HTTP_PORT" > /tmp/ruview_ui.log 2>&1 &
 UI_PID=$!
-echo "[+] RuView UI HTTP server started on port 3000 (PID $UI_PID)"
+echo "[+] RuView UI HTTP server started on port $HTTP_PORT (PID $UI_PID)"
 
 LAN_IP=$(ip -4 addr show dev eno1 2>/dev/null | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | head -n 1 || echo "127.0.0.1")
+TAILSCALE_IP=$(ip -4 addr show dev tailscale0 2>/dev/null | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | head -n 1 || echo "N/A")
 
 echo ""
 echo "=================================================="
-echo "RUVIEW URL:          http://$LAN_IP:3000/index.html"
-echo "MODE:                $ILLUMINATOR_MODE"
-echo "MT7925:              PCIe Wi-Fi 7 (14c3:0717) [ACTIVE TELEMETRY]"
-echo "AR9271:              USB 802.11n (0cf3:9271) [RF ILLUMINATOR]"
-echo "LIVE SAMPLE RATE:    ~65.0 - 117.6 samples/sec"
-echo "PRESENCE DETECTION:  ACTIVE (Adaptive Baseline Classifier)"
-echo "MOTION DETECTION:    ACTIVE (RCPI Differential Variance)"
-echo "TRUE CSI:            NO (Scalar RX-Vector Telemetry Mode)"
-echo "SPATIAL LOCALIZATION: NO (Dispersed Proxy Signal Field)"
+echo "RUVIEW LAN URL:        http://$LAN_IP:$HTTP_PORT/index.html"
+echo "RUVIEW TAILSCALE URL:  http://$TAILSCALE_IP:$HTTP_PORT/index.html"
+echo "MODE:                  $ILLUMINATOR_MODE"
+echo "HTTP PORT:             $HTTP_PORT"
+echo "WEBSOCKET PORT:        $WS_PORT"
+echo "MT7925:                PCIe Wi-Fi 7 (14c3:0717) [ACTIVE TELEMETRY]"
+echo "AR9271:                USB 802.11n (0cf3:9271) [RF ILLUMINATOR]"
+echo "LIVE SAMPLE RATE:      ~65.0 - 117.6 samples/sec"
+echo "PRESENCE DETECTION:    ACTIVE (Adaptive Baseline Classifier)"
+echo "MOTION DETECTION:      ACTIVE (RCPI Differential Variance)"
+echo "TRUE CSI:              NO (Scalar RX-Vector Telemetry Mode)"
+echo "SPATIAL LOCALIZATION:   NO (Dispersed Proxy Signal Field)"
 echo "=================================================="
 echo ""
 echo "[+] RuView MT7925 Household Sensing Platform is now LIVE."
