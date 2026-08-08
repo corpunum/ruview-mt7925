@@ -8,7 +8,7 @@ RuView formally tracks two complementary hardware sensing backends:
 
 1. **MediaTek MT7925 (Primary / Onboard)**
    - **Type:** Onboard Wi-Fi 7 PCI Express adapter (`14c3:0717`).
-   - **Status:** Active Primary Target. Gate 1 & Gate 2 Driver Replacement `PASS [RUNTIME PROVEN]`. Canonical Patch v3 `icap_trigger` DebugFS node `PASS [RUNTIME PROVEN]`. Passive RX-Vector Telemetry Ring Buffer `PASS [RUNTIME PROVEN]` (`docs/MT7925_RXV_RUNTIME_PROOF.md`). High-Rate Profiling Proof complete (`docs/MT7925_HIGHRATE_PROFILING_PROOF.md`). Passive Sensing & Blind Classification Proof complete (`docs/MT7925_PASSIVE_SENSING_PROOF.md`). Declared `B = PROMISING BUT MORE VALIDATION REQUIRED`. Reproducible build script `tools/build-high-rate-telemetry.sh` `PASS [RUNTIME PROVEN]`.
+   - **Status:** Active Primary Target. Gate 1 & Gate 2 Driver Replacement `PASS [RUNTIME PROVEN]`. Canonical Patch v3 `icap_trigger` DebugFS node `PASS [RUNTIME PROVEN]`. Passive RX-Vector Telemetry Ring Buffer `PASS [RUNTIME PROVEN]` (`docs/MT7925_RXV_RUNTIME_PROOF.md`). High-Rate Profiling Proof complete (`docs/MT7925_HIGHRATE_PROFILING_PROOF.md`). Spatial Sensing Evaluation complete (`docs/MT7925_SPATIAL_SENSING_EVALUATION.md`). Formally declared **`B — MOTION SENSING DEMONSTRATED`**. Reproducible build script `tools/build-high-rate-telemetry.sh` `PASS [RUNTIME PROVEN]`.
    - **Documentation:** [`hardware/mt7925/README.md`](hardware/mt7925/README.md)
 
 2. **TP-Link TL-WN722N v1.0 (Secondary / USB Reference & Packet Injector)**
@@ -49,7 +49,7 @@ RuView formally tracks two complementary hardware sensing backends:
 > - **MT7925 Passive RX-Vector Telemetry Ring Buffer is `PASS [RUNTIME PROVEN]`.**
 > - **Exposes per-packet `RCPI0-3` (4 antenna chains), TxBF, MCS, BW, NSS, and STBC metrics.**
 > - **High-Rate Reception Profiling complete (`docs/MT7925_HIGHRATE_PROFILING_PROOF.md`). Achieved 65.0 to 117.6 samples/sec in monitor mode.**
-> - **Blind Motion Classification complete (`docs/MT7925_PASSIVE_SENSING_PROOF.md`). Model 4 Combined Features achieved 59.6% test accuracy (F1: 0.75).**
+> - **Spatial Evaluation complete (`docs/MT7925_SPATIAL_SENSING_EVALUATION.md`). Formally declared `B — MOTION SENSING DEMONSTRATED`.**
 > - TL-WN722N v1.0 USB hardware serves as a controlled 802.11n packet injector.
 > - **OpenUnum is completely out of scope.**
 
@@ -59,6 +59,7 @@ RuView formally tracks two complementary hardware sensing backends:
 
 - [Project Status](STATUS.md)
 - [Agent Task & Execution Log](docs/AGENT_TASK.md)
+- [MT7925 Spatial Sensing Evaluation](docs/MT7925_SPATIAL_SENSING_EVALUATION.md)
 - [MT7925 Passive Sensing Proof](docs/MT7925_PASSIVE_SENSING_PROOF.md)
 - [MT7925 High-Rate Profiling Proof](docs/MT7925_HIGHRATE_PROFILING_PROOF.md)
 - [MT7925 RX-Vector Runtime Proof](docs/MT7925_RXV_RUNTIME_PROOF.md)

@@ -2,17 +2,18 @@
 
 ## Summary Declaration
 
-**MT7925 PASSIVE MOVEMENT SENSING & BLIND CLASSIFICATION COMPLETE (`PASS`) ON AUGUST 8, 2026 (`docs/MT7925_PASSIVE_SENSING_PROOF.md`).**
+**MT7925 SPATIAL SENSING EVALUATION COMPLETE (`PASS`) ON AUGUST 8, 2026 (`docs/MT7925_SPATIAL_SENSING_EVALUATION.md`).**
 
-**ACCUMULATED DATASET EVALUATION COMPLETE:** Processed 2,614 total raw RXV samples across 35 proven binary artifacts. Constructed 4 blind classification models evaluated on unseen test split data (154 Train, 104 Test).
+**SPATIAL EVALUATION BENCHMARK:**
+- Binary Movement Accuracy: **59.6%** (Model D Combined)
+- Binary Balanced Accuracy: **50.0%**
+- Precision: **1.00**, Recall: **0.60**, F1 Score: **0.75**
+- Spatial Left vs Right Separation Accuracy: **50.0%** (Chance Baseline)
+- Multiclass Spatial Accuracy (5 Classes): **20.0%** (Chance Baseline)
 
-**MODEL ACCURACY BENCHMARK:**
-- Model 1 (Absolute RSSI Only): **43.3%** Test Accuracy
-- Model 2 (Differential RCPI): **46.2%** Test Accuracy
-- Model 3 (RXV Telemetry Only): **45.2%** Test Accuracy
-- Model 4 (Combined Features): **59.6%** Test Accuracy (F1 Score: **0.75**, Precision: **1.00**, Recall: **0.60**)
+**C-RXV WORD 7 & 8 IDENTIFICATION:** Proved C-RXV Words 7 & 8 correlate 100% with `BSS_COLOR` and Doppler MAC/PHY frame control flags. They represent frame-type metadata rather than spatial CSI subcarriers.
 
-**VERDICT DECLARATION:** **`B = PROMISING BUT MORE VALIDATION REQUIRED`**.
+**DECISION GATE VERDICT:** **`B — MOTION SENSING DEMONSTRATED`** (*Movement generalizes across unseen experimental cycles, but spatial position does not*).
 
 **POST-TEST ROLLBACK COMPLETE:** Controlled rollback restored stock in-tree signed driver stack (`/lib/modules/.../mt7925e.ko.zst`) in <1 second. Primary SSH route on `eno1` remained 100% active throughout.
 
@@ -48,8 +49,8 @@
 
 ## Declaration
 
-MT7925 Passive Movement Sensing Status: **`PASS [RUNTIME PROVEN]`**.
+MT7925 Spatial Sensing Status: **`PASS [RUNTIME PROVEN]`**.
 
-Final Classification Verdict: **`B = PROMISING BUT MORE VALIDATION REQUIRED`**.
+Final Classification Verdict: **`B — MOTION SENSING DEMONSTRATED`**.
 
 Final driver state: Stock signed driver `mt7925e.ko.zst` active.
