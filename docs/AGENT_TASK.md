@@ -73,9 +73,10 @@ Do **not** flash WDR3600 router. (TL-WDR3600 investigation is DEFERRED / OUT OF 
 - **8-Byte Response Deconstruction:** Decoded `46 00 00 00 00 00 00 00` as `struct mt7925_mcu_uni_event` (`cid=0x46`, `status=0x00` [`STATUS_SUCCESS`]). Authored [`docs/MT7925_MCU_TESTMODE_FORENSICS.md`](MT7925_MCU_TESTMODE_FORENSICS.md).
 
 ### 2026-08-08: RuView Household Live Sensing Platform Built & Operational
-- **Main Commit SHA:** `31fa133`
+- **Main Commit SHA:** `PENDING_COMMIT`
 - **RuView Repository Cloned & Analyzed:** Cloned `ruvnet/RuView` (`v2146`) to `/home/corpunum/ruview-upstream`. Formally mapped expected CSI JSON schema to MT7925 P-RXV/C-RXV telemetry features (`docs/RUVIEW_INTEGRATION_MAP.md`).
 - **Bridge & Illuminator Created:** Created `tools/ruview-mt7925-bridge.py` and `tools/rf-illuminator.sh`.
 - **Live Startup & Shutdown Scripts:** Created `start-ruview-sensing.sh` and `stop-ruview-sensing.sh`.
 - **Port Conflict Resolution & Network Binding:** Configured HTTP web UI on non-conflicting port `3080` and WebSocket bridge on port `3081`. Explicitly bound to `0.0.0.0` to enable access over both Localhost, LAN (`192.168.50.251`), and Tailscale (`100.76.5.104`).
-- **Live Web Interface:** RuView UI live at `http://100.76.5.104:3080/index.html` (Tailscale) and `http://192.168.50.251:3080/index.html` (LAN), receiving live WebSocket stream on `ws://100.76.5.104:3081/ws/sensing`.
+- **HTTP Status Endpoint Integration:** Embedded HTTP status handler (`process_request` in `tools/ruview-mt7925-bridge.py`) serving `/api/v1/status` and `/health/live` returning `{"status": "ok", "source": "live"}` on port `3081`. Resolved `BackendDetector` health check timeout and banner warnings.
+- **Live Web Interface:** RuView UI live at `http://100.76.5.104:3080/index.html` (Tailscale) and `http://192.168.50.251:3080/index.html` (LAN), displaying green **LIVE — ESP32 HARDWARE** banner receiving live stream on `ws://100.76.5.104:3081/ws/sensing`.

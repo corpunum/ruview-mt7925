@@ -203,6 +203,23 @@ class MT7925SensingBridge:
                 print(f"[!] Re-opening node in 1s ({e})...")
                 await asyncio.sleep(1.0)
 
+    async def http_handler(self, path, request_headers):
+        import http
+        if path in ["/api/v1/status", "/health/live", "/health/ready", "/health/health"]:
+            response_body = json.dumps({
+                "status": "ok",
+                "source": "live",
+                "hardware": "MediaTek MT7925 PCIe",
+                "mode": self.mode
+            }).encode('utf-8')
+            headers = websockets.Headers([
+                ("Content-Type", "application/json"),
+                ("Content-Length", str(len(response_body))),
+                ("Access-Control-Allow-Origin", "*")
+            ])
+            return (http.HTTPStatus.OK, headers, response_body)
+        return None
+
 async def main():
     parser = argparse.ArgumentParser(description="RuView MT7925 RXV Telemetry Bridge")
     parser.add_argument("--node", required=True, help="DebugFS telemetry node path")
@@ -212,7 +229,12 @@ async def main():
 
     bridge = MT7925SensingBridge(debugfs_path=args.node, port=args.port, mode=args.mode)
     
-    server = await websockets.serve(bridge.register, "0.0.0.0", args.port)
+    server = await websockets.serve(
+        bridge.register,
+        "0.0.0.0",
+        args.port,
+        process_request=bridge.http_handler
+    )
     print(f"[+] RuView MT7925 WebSocket Server listening on ws://0.0.0.0:{args.port}/ws/sensing")
     
     await bridge.reader_loop()
